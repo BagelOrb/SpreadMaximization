@@ -19,7 +19,7 @@ class Convolution : NoCopy
     
     int output_type = -1; // same is input type (CV_32U ?)
     Point anchor = Point(1, 1); // the first convoluted patch results in pixel (0,0) of the output
-    int border_type = BORDER_REPLICATE;
+    int border_type = BORDER_CONSTANT;
     
 /* http://docs.opencv.org/modules/imgproc/doc/filtering.html
  Various border types, image boundaries are denoted with '|'
@@ -35,13 +35,13 @@ public:
     
     Convolution& getInstance() { return instance; }
     
-    void convolute(std::vector<Mat>& src, Mat& dst, Neuron& neuron)
+    void convolute(std::vector<Mat_<val>>& src, Mat_<val>& dst, Neuron& neuron)
     {
         assert(src.size() > 0);
         assert(src.size() == neuron.weights.size());
         assert(dst.channels() == 1); // result is always a single output channel
         
-        std::vector<Mat> channels_dst(neuron.weights.size());
+        std::vector<Mat_<val>> channels_dst(neuron.weights.size());
         dst = neuron.bias; // set all values in the result to the bias
         for (int channel_idx = 0; channel_idx < src.size(); channel_idx++)
         {
@@ -54,7 +54,7 @@ public:
         
     }
     
-    convolute(std::vector<Mat>& src, std::vector<Mat>& dst, Layer& layer) 
+    void convolute(std::vector<Mat_<val>>& src, std::vector<Mat_<val>>& dst, Layer& layer) 
     {
         assert(dst.size() == layer.neurons.size());
         for (unsigned int neuron_idx = 0; neuron_idx < layer.neurons.size(); neuron_idx++)

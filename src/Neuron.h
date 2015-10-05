@@ -10,15 +10,19 @@ using namespace cv;
 
 class Neuron 
 {
+public:
     std::vector<Mat_<val>> weights;
     val bias;
 
     int size;
     
-    Neuron(int size) 
+    Neuron(int size, int n_input_channels) 
     : size(size)
-    , weights(size, size)
     {   
+        while (weights.size() < n_input_channels)
+        {
+            weights.emplace_back(size, size);
+        }
     }
 
 };

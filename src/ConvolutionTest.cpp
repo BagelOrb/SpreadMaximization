@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <iostream>
 
+#include "Convolution.h" // TODO remove
+#include "SignallingFunction.h" // TODO remove
+
+
 using namespace cv;
 
 /** @function main */
@@ -36,13 +40,12 @@ int main ( int argc, char** argv )
     delta = 0;
     ddepth = -1; // output 
 
-    std::cout << src.depth() << std::endl;
-    std::cout << CV_8U << std::endl;
+    std::cout << src.rows << ", " << src.cols << std::endl;
     
     /// Update kernel size for a normalized box filter
-    kernel_size = 51;
+    kernel_size = 101;
 //     kernel = Mat::ones( kernel_size, kernel_size, CV_32F )/ (float)(kernel_size*kernel_size);
-    kernel = getGaussianKernel(kernel_size, 20);
+    kernel = getGaussianKernel(kernel_size, 50);
 
     /// Apply filter
     std::vector<Mat> rgbChannels(3);
@@ -50,10 +53,10 @@ int main ( int argc, char** argv )
     split(src, rgbChannels);
     for (int col = 0; col < 3; col++)
     {
-        filter2D(rgbChannels[col], rgbChannels_result[col], ddepth , kernel, anchor, delta, BORDER_DEFAULT );
+        filter2D(rgbChannels[col], rgbChannels_result[col], ddepth , kernel, anchor, delta, BORDER_CONSTANT);
         transpose(kernel, kernel);
     }
-    rgbChannels_result[2] = rgbChannels[2];
+    rgbChannels_result[0] = rgbChannels[0];
     merge(rgbChannels_result, dst);
     
     
@@ -62,6 +65,7 @@ int main ( int argc, char** argv )
 //     rgbChannels_ff[0] = 0;
 //     merge(rgbChannels_ff, dst);
     
+    std::cout << dst.rows << ", " << dst.cols << std::endl;
     imshow( window_name, dst );
     
     waitKey(0);
