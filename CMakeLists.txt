@@ -12,7 +12,8 @@ set(SRCS
 #     src/main.cpp
 #     src/test.cpp
 #     src/DisplayImage.cpp
-    src/ConvolutionExample.cpp
+#     src/ConvolutionExample.cpp
+    src/ConvolutionTest.cpp
 )
 
 
@@ -24,3 +25,4 @@ find_package( OpenCV REQUIRED )
 include_directories(src)
 add_executable( SpreadMaximization ${SRCS} )
 target_link_libraries( SpreadMaximization ${OpenCV_LIBS} )
+add_subdirectory(src/utils)

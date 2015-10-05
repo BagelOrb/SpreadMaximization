@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "Convolution.h"
+
 using namespace cv;
 
 /** @function main */
