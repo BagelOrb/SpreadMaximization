@@ -7,6 +7,7 @@
 
 #include "Convolution.h" // TODO remove
 #include "SignallingFunction.h" // TODO remove
+#include "LayerSignalData.h" // TODO remove line
 
 
 using namespace cv;

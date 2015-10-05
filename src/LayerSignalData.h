@@ -22,7 +22,21 @@ class LayerSignalData
     LayerSignalData(std::string filename)
     {
         Mat img = imread( filename.c_str() );
-        
+        for (int chan = 0; chan < 3; chan++)
+        {
+            signalled.emplace_back(img.rows, img.cols);
+        }
+        for (int x = 0; x < img.rows; x++)
+        {
+            for (int y = 0; y < img.cols; y++)
+            {
+                Vec3b colors = img.at<Vec3b>(x, y);
+                for (int chan = 0; chan < 3; chan++)
+                {
+                    signalled.at(x, y) = val(colors.val[chan]) / 128.0 - 1.0; // ranging from -1 to 1
+                }
+            }
+        }
     }
     
 };
