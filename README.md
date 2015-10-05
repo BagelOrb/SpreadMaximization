@@ -1,2 +1,2 @@
 # SpreadMaximization
-Neural networks nw unsupervised learning techniques
+Neural networks new unsupervised learning techniques

@@ -9,13 +9,18 @@ else()
 endif()
 
 set(SRCS
-    src/main.cpp
-    src/test.cpp
+#     src/main.cpp
+#     src/test.cpp
+#     src/DisplayImage.cpp
+    src/ConvolutionExample.cpp
 )
 
 
-#find_package( OpenCV REQUIRED )
+#find_package(OpenCV 3.0 REQUIRED COMPONENTS calib3d core features2d highgui imgproc photo)
+find_package( OpenCV REQUIRED )
+# set(OpenCV_DIR /usr/local/lib)
+
+
 include_directories(src)
 add_executable( SpreadMaximization ${SRCS} )
-#target_link_libraries( SpreadMaximization ${OpenCV_LIBS} )
-target_link_libraries( SpreadMaximization )
+target_link_libraries( SpreadMaximization ${OpenCV_LIBS} )

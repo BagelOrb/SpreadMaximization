@@ -2,6 +2,7 @@
 #define MAT3DF_H
 
 #include <cassert> // assert
+#include "debug.h"
 
 class Mat3Df
 {
@@ -26,15 +27,41 @@ public:
         
         bool operator==(const Pos& p) const { return x==p.x&&y==p.y&&z==p.z; }
         bool operator!=(const Pos& p) const { return x!=p.x||y!=p.y||z!=p.z; }
-    };
-    Pos getPos(unsigned int dataPos)
+    };    
+    class iterator
     {
-        unsigned int x = dataPos % w;
-        unsigned int y = dataPos / w % h;
-        unsigned int z = dataPos / (w * h); // % d ( unnecesary if pos is correct)
-        return Pos(x,y,z);
-    }
-    unsigned int getDataPos(Pos p) { return w*h* p.z + w* p.y + p.x; }
+    public:
+        unsigned int x, y, z;
+        Mat3Df& mat;
+        iterator(unsigned int x, unsigned int y, unsigned int z, Mat3Df& mat) : x(x), y(y), z(z), mat(mat) { }
+        friend class Mat3Df;
+        iterator& operator++() 
+        {
+            x++;
+            if (x == mat.w) 
+            {
+                x = 0;
+                y++;
+                if (y == mat.h)
+                {
+                    y = 0;
+                    z++;
+                }
+            }
+            return *this;
+        }
+        iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
+        float& operator*() { return mat.data[mat.w*mat.h* z + mat.w* y + x]; }
+        float* operator->() { return &*(*this); }
+        Pos operator+(iterator other) { return Pos(x+other.x, y+other.y, z+other.z); }
+        Pos getPos() { return Pos(x,y,z); }
+        bool operator==(iterator other) { return &mat == &other.mat && x == other.x && y == other.y && z == other.z; }
+        bool operator!=(iterator other) { return !(*this == other); }
+        
+        
+    };
+    iterator end() { return iterator(0,0,d, *this); }
+    iterator begin() { return iterator(0,0,0, *this); }
     
     Mat3Df(unsigned int w, unsigned int h, unsigned int d)
     : w(w), h(h), d(d), size(w*h*d)
@@ -64,16 +91,13 @@ private:
     void _convolute(Mat3Df& kernel, Mat3Df& result, unsigned int z)
     {
         assert(kernel.w <= w && kernel.h <= h && kernel.d <= d);
-        for (unsigned int x = 0; x < result.w; x++)
-        for (unsigned int y = 0; y < result.h; y++)
+        for (iterator res_it = result.begin(); res_it != iterator(0,0,1,result); ++res_it)
         {
-            Pos resPos(x, y, z);
-            result.set(resPos, 0);
-            for (unsigned int kp = 0; kp < kernel.size; kp++)
+            *res_it = 0;
+            for (iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
-                Pos kernelPos = kernel.getPos(kp);
-                Pos dataPos = resPos + kernelPos;
-                result.add(resPos, get(dataPos) * kernel.get(kernelPos));
+                Pos dataPos = res_it + k_it;
+                result.add(res_it.getPos(), get(dataPos) * *k_it);
             }
         }
     }
@@ -81,7 +105,7 @@ public:
     Mat3Df convolute(Mat3Df kernel)
     {
         Mat3Df result(w - kernel.w + 1, h - kernel.h + 1, 1);
-        _convolute(result, result, 0);
+        _convolute(kernel, result, 0);
         return result;
     }
     Mat3Df convolute(Mat3Df& kernel, Mat3Df& result, unsigned int z)

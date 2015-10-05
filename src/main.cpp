@@ -3,7 +3,7 @@
 #include <iostream> // std::cerr
 
 #include "Mat3Df.h"
-
+#include "debug.h"
 
 int main ( int argc, char** argv )
 {
@@ -34,17 +34,9 @@ int main ( int argc, char** argv )
     Mat3Df r = m.convolute(k);
     r = r.apply([](float in) {return in -1; } );
     
-    for (int z = 0; z < r.d; z++)
-    {
-        for (int y = 0; y < r.h; y++)
-        {
-            for (int x = 0; x < r.w; x++)
-            {
-                std::cerr << r.get(x,y,z) << "\t"; 
-            }
-            std::cerr << std::endl;
-        }
-        std::cerr << std::endl;
-    }
+    for (Mat3Df::iterator it = r.begin(); it != r.end(); ++it)
+        std::cerr << ((it.x == 0)? "\n" : std::string("\t")) << *it;
+    
+    
     return 0;   
 }
