@@ -10,10 +10,8 @@ endif()
 
 set(SRCS
 #     src/main.cpp
-#     src/test.cpp
+    src/test.cpp
 #     src/DisplayImage.cpp
-#     src/ConvolutionExample.cpp
-    src/ConvolutionTest.cpp
 )
 
 

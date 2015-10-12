@@ -6,7 +6,7 @@
 #include "Mat3Df.h"
 
 
-int test_main ( int argc, char** argv )
+int main ( int argc, char** argv )
 {
     typedef Mat3Df::Pos Pos;
     int w = 5;
