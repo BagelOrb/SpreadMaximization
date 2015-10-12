@@ -16,12 +16,12 @@ public:
     
 public:
     
-    class iterator
+    class iterator : public Pos
     {
     public:
-        unsigned int x, y, z;
+//         unsigned int x, y, z;
         Mat3Df& mat;
-        iterator(unsigned int x, unsigned int y, unsigned int z, Mat3Df& mat) : x(x), y(y), z(z), mat(mat) { }
+        iterator(unsigned int x, unsigned int y, unsigned int z, Mat3Df& mat) : Pos(x, y, z), mat(mat) { }
         friend class Mat3Df;
         iterator& operator++() 
         {
@@ -41,8 +41,8 @@ public:
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
         float& operator*() { return mat.data[mat.w*mat.h* z + mat.w* y + x]; }
         float* operator->() { return &*(*this); }
-        Pos operator+(iterator other) { return Pos(x+other.x, y+other.y, z+other.z); }
-        Pos getPos() { return Pos(x,y,z); }
+//         Pos operator+(iterator other) { return Pos(x+other.x, y+other.y, z+other.z); }
+//         Pos getPos() { return Pos(x,y,z); }
         bool operator==(iterator other) { return &mat == &other.mat && x == other.x && y == other.y && z == other.z; }
         bool operator!=(iterator other) { return !(*this == other); }
         
@@ -98,7 +98,7 @@ private:
             for (iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
                 Pos dataPos = res_it + k_it;
-                result.add(res_it.getPos(), get(dataPos) * *k_it);
+                result.add(res_it, get(dataPos) * *k_it);
             }
         }
     }

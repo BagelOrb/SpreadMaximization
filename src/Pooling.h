@@ -2,7 +2,10 @@
 #define POOLING_H
 
 #include <cassert>
+#include <limits>
+#include <iostream> // temp
 
+#include "Pos.h"
 #include "Mat3Df.h"
 
 class Pooling 
@@ -25,35 +28,35 @@ public:
     
 private:
     
-    void _pool(Mat3Df& input, Mat3Df& result, unsigned int z)
+    void _pool(Mat3Df& input, Mat3Df& result)
     {
         assert(pool_size.w <= input.w && pool_size.h <= input.h && pool_size.d <= input.d);
         for (Mat3Df::iterator res_it = result.begin(); res_it != Mat3Df::iterator(0,0,1,result); ++res_it)
         {
-            *res_it = 0;
-//             for (Mat3Df::iterator k_it = skip.begin(); k_it != skip.end(); ++k_it)
-//             {
-//                 Mat3Df::Pos dataPos = res_it + k_it;
-//                 result.add(res_it.getPos(), input.get(dataPos) * *k_it);
-//             }
+            _poolMax(input, result, res_it);
         }
     }
     
-    void _poolMax()
+    void _poolMax(Mat3Df& input, Mat3Df& result, Mat3Df::iterator res_it)
     {
-        
+        *res_it = std::numeric_limits<float>::lowest();
+        for (Dims::iterator k_it = pool_size.begin(); k_it != pool_size.end(); ++k_it)
+        {
+            Pos dataPos = res_it * skip + k_it;
+            *res_it = std::max(*res_it, input.get(dataPos));
+        }
     }
 public:
     Mat3Df pool(Mat3Df& input)
     {
         Mat3Df result(getOutputDims(input.getDims()));
-        _pool(input, result, 0);
+        _pool(input, result);
         return result;
     }
-    Mat3Df pool(Mat3Df& input, Mat3Df& result, unsigned int z)
+    Mat3Df pool(Mat3Df& input, Mat3Df& result)
     {
         assert(result.getDims() == getOutputDims(input.getDims()));
-        _pool(input, result, z);
+        _pool(input, result);
         return result;
     }
     

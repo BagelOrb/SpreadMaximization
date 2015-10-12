@@ -12,7 +12,7 @@
 int main ( int argc, char** argv )
 {
     int w = 5;
-    int h = 4;
+    int h = 5;
     int d = 3;
     Mat3Df m(Dims(w,h,d));
     float i = 0;
@@ -38,7 +38,7 @@ int main ( int argc, char** argv )
     auto func = [](float in) 
     { 
 //         std::cerr << "sdg " <<std::endl; 
-        return in * -1; 
+        return in + 1; 
     };
     
     Mat3Df r = conv.convolute(m).apply(func );
@@ -56,5 +56,29 @@ int main ( int argc, char** argv )
         }
         std::cerr << std::endl;
     }
+    
+    std::cerr << " afsfasfasfasfasfasfasfasfas" << std::endl;
+    
+    Pooling pool(Dims(2, 2, 1), Dims2(2, 2));
+    
+    r = pool.pool(r);
+    
+    
+    for (int z = 0; z < r.d; z++)
+    {
+        for (int y = 0; y < r.h; y++)
+        {
+            for (int x = 0; x < r.w; x++)
+            {
+                std::cerr << r.get(x,y,z) << "\t"; 
+            }
+            std::cerr << std::endl;
+        }
+        std::cerr << std::endl;
+    }
+    
+    
+    
+    
     return 0;   
 }

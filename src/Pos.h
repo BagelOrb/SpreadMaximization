@@ -108,7 +108,10 @@ public:
 
 
 
-
+Pos operator *(Pos& a, Dims2& b)
+{
+    return Pos(a.x * b.w, a.y * b.h, a.z);
+}
 
 
 

@@ -37,7 +37,7 @@ private:
             for (Mat3Df::iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
                 Pos dataPos = res_it + k_it;
-                result.add(res_it.getPos(), input.get(dataPos) * *k_it);
+                result.add(res_it, input.get(dataPos) * *k_it);
             }
         }
     }
