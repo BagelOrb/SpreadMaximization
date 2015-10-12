@@ -4,6 +4,8 @@
 #include <cassert> // assert
 #include "debug.h"
 
+#include "Pos.h"
+
 class Mat3Df
 {
 private:
@@ -13,42 +15,6 @@ public:
     unsigned int size;
     
 public:
-    struct Pos
-    {
-        unsigned int x, y, z;
-        Pos(unsigned int x, unsigned int y, unsigned int z) 
-        : x(x), y(y), z(z) 
-        { }
-//         Pos(unsigned int& x, unsigned int& y, unsigned int& z) 
-//         : x(x), y(y), z(z) 
-//         { }
-        
-        Pos operator+(const Pos p) const { return Pos(x+p.x, y+p.y, z+p.z); }
-        Pos operator-(const Pos p) const { return Pos(x-p.x, y-p.y, z-p.z); }
-        
-        Pos& operator += (const Pos& p) { x += p.x; y += p.y; z += p.z; return *this; }
-        Pos& operator -= (const Pos& p) { x -= p.x; y -= p.y; z -= p.z; return *this; }
-        
-        bool operator==(const Pos& p) const { return x==p.x&&y==p.y&&z==p.z; }
-        bool operator!=(const Pos& p) const { return x!=p.x||y!=p.y||z!=p.z; }
-    };  
-    struct Dims 
-    {
-        const unsigned int w, h, d;
-        Dims(unsigned int w, unsigned int h, unsigned int d) 
-        : w(w), h(h), d(d)
-        {
-        }
-    };
-    struct Dims2
-    {
-        const unsigned int w, h;
-        Dims2(unsigned int w, unsigned int h)
-        : w(w), h(h)
-        {
-        }
-    };
-    
     
     class iterator
     {
@@ -84,7 +50,7 @@ public:
     };
     iterator end() { return iterator(0,0,d, *this); }
     iterator begin() { return iterator(0,0,0, *this); }
-   
+
 private:
     Mat3Df(unsigned int w, unsigned int h, unsigned int d)
     : w(w), h(h), d(d), size(w*h*d)

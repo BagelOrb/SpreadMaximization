@@ -6,6 +6,7 @@
 #include <cmath> // tanh
 #include <math.h>       /* exp */
 
+#include "Pos.h"
 #include "Mat3Df.h"
 
 class Layer
@@ -29,7 +30,7 @@ class Layer
         unsigned int pool_size = 2;
         
         
-        float soft_arg_max_abs(Mat3Df::Pos conv_pos, unsigned int w, unsigned int h, unsigned int z, float hardness)
+        float soft_arg_max_abs(Pos conv_pos, unsigned int w, unsigned int h, unsigned int z, float hardness)
         {
             double denom = 0;
             double total = 0;
@@ -53,7 +54,7 @@ class Layer
             for (int y = 0; y < convoluted.h; y++)
             for (int z = 0; z < convoluted.d; z++)
             {
-                pooled.set(x, y, z, soft_arg_max_abs(Mat3Df::Pos(x*pool_size, y*pool_size, z), pool_size, pool_size, 1));
+                pooled.set(x, y, z, soft_arg_max_abs(Pos(x*pool_size, y*pool_size, z), pool_size, pool_size, 1));
             }
         }
         

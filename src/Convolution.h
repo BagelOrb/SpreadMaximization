@@ -3,6 +3,7 @@
 
 #include <cassert>
 
+#include "Pos.h"
 #include "Mat3Df.h"
 
 class Convolution 
@@ -14,15 +15,15 @@ public:
     {  
     }
     
-    Convolution(Mat3Df::Dims dims)
+    Convolution(Dims dims)
     : kernel(dims)
     { 
     }
     
     
-    Mat3Df::Dims2 getOutputDims(Mat3Df::Dims input_dims)
+    Dims2 getOutputDims(Dims input_dims)
     {
-        return Mat3Df::Dims2(input_dims.w - kernel.w + 1, input_dims.h - kernel.h + 1);
+        return Dims2(input_dims.w - kernel.w + 1, input_dims.h - kernel.h + 1);
     }
     
 private:
@@ -35,7 +36,7 @@ private:
             *res_it = 0;
             for (Mat3Df::iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
-                Mat3Df::Pos dataPos = res_it + k_it;
+                Pos dataPos = res_it + k_it;
                 result.add(res_it.getPos(), input.get(dataPos) * *k_it);
             }
         }
@@ -43,8 +44,8 @@ private:
 public:
     Mat3Df convolute(Mat3Df& input)
     {
-        Mat3Df::Dims2 out_dims = getOutputDims(input.getDims());
-        Mat3Df result(Mat3Df::Dims(out_dims.w, out_dims.h, 1));
+        Dims2 out_dims = getOutputDims(input.getDims());
+        Mat3Df result(Dims(out_dims.w, out_dims.h, 1));
         _convolute(input, result, 0);
         return result;
     }

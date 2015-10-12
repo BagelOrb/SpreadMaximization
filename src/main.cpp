@@ -7,7 +7,6 @@
 
 int main ( int argc, char** argv )
 {
-    typedef Mat3Df::Pos Pos;
     int w = 5;
     int h = 4;
     int d = 3;

@@ -5,14 +5,16 @@
 
 #include "Mat3Df.h"
 #include "Convolution.h"
+#include "Pooling.h"
+#include "Pos.h"
+
 
 int main ( int argc, char** argv )
 {
-    typedef Mat3Df::Pos Pos;
     int w = 5;
     int h = 4;
     int d = 3;
-    Mat3Df m(Mat3Df::Dims(w,h,d));
+    Mat3Df m(Dims(w,h,d));
     float i = 0;
     for (int z = 0; z < d; z++)
     for (int y = 0; y < h; y++)
@@ -22,7 +24,7 @@ int main ( int argc, char** argv )
         i++;
     }
 
-    Convolution conv(Mat3Df::Dims(2, 2, 2));
+    Convolution conv(Dims(2, 2, 2));
     Mat3Df& k = conv.kernel;
     for (int z = 0; z < k.d; z++)
     for (int y = 0; y < k.h; y++)
