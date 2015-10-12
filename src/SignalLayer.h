@@ -41,6 +41,14 @@ public:
         }
     }
     
+    void initializeParams(std::function<float(float)> func)
+    {
+        for (Neuron& neuron : neurons)
+        {
+            neuron.initializeParams(func);
+        }
+    }
+    
     void forward(Mat3Df& in, Mat3Df& out)
     {
         for (unsigned int z = 0; z < out.d; z++)
@@ -51,13 +59,6 @@ public:
     void backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat3Df& in_derivatives) = 0;
 
 
-    void initializeParams(std::function<float(float)> func)
-    {
-        for (Neuron& neuron : neurons)
-        {
-            neuron.initializeParams(func);
-        }
-    }
 
 
 
