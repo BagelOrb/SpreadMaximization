@@ -16,8 +16,12 @@ public:
     struct Pos
     {
         unsigned int x, y, z;
-        Pos(unsigned int x, unsigned int y, unsigned int z) : x(x), y(y), z(z) 
+        Pos(unsigned int x, unsigned int y, unsigned int z) 
+        : x(x), y(y), z(z) 
         { }
+//         Pos(unsigned int& x, unsigned int& y, unsigned int& z) 
+//         : x(x), y(y), z(z) 
+//         { }
         
         Pos operator+(const Pos p) const { return Pos(x+p.x, y+p.y, z+p.z); }
         Pos operator-(const Pos p) const { return Pos(x-p.x, y-p.y, z-p.z); }
@@ -27,7 +31,15 @@ public:
         
         bool operator==(const Pos& p) const { return x==p.x&&y==p.y&&z==p.z; }
         bool operator!=(const Pos& p) const { return x!=p.x||y!=p.y||z!=p.z; }
-    };    
+    };  
+    struct Dims : public Pos 
+    {
+        Dims(unsigned int x, unsigned int y, unsigned int z) 
+        : Pos(x, y, z)
+        {
+        }
+    };
+    
     class iterator
     {
     public:
@@ -62,12 +74,25 @@ public:
     };
     iterator end() { return iterator(0,0,d, *this); }
     iterator begin() { return iterator(0,0,0, *this); }
-    
+   
+private:
     Mat3Df(unsigned int w, unsigned int h, unsigned int d)
     : w(w), h(h), d(d), size(w*h*d)
     {
         data = new float[w*h*d];
     }
+    
+public:
+    Mat3Df(Dims dims)
+    : Mat3Df(dims.x, dims.y, dims.z)
+    {
+    };
+    
+    Dims getDims()
+    {
+        return Dims(w, h, d);
+    }
+    
     void clear(float val = 0)
     {
         for (int i = 0; i < w*h*d; i++)
