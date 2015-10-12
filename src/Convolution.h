@@ -9,15 +9,10 @@
 class Convolution 
 {
 public:
-    Mat3Df kernel;
+    Mat3Df& kernel;
     Convolution(Mat3Df& kernel)
     : kernel(kernel)
     {  
-    }
-    
-    Convolution(Dims dims)
-    : kernel(dims)
-    { 
     }
     
     

@@ -8,8 +8,20 @@
 #include "Pooling.h"
 #include "Pos.h"
 
+#include "SignalLayer.h"
 
 int main ( int argc, char** argv )
+{
+    
+    
+    
+    
+    
+    return 0;   
+}
+
+
+void test_convolution()
 {
     int w = 5;
     int h = 5;
@@ -24,8 +36,10 @@ int main ( int argc, char** argv )
         i++;
     }
 
-    Convolution conv(Dims(2, 2, 2));
-    Mat3Df& k = conv.kernel;
+    
+    
+    Mat3Df k(Dims(2, 2, 2));
+    Convolution conv(k);
     for (int z = 0; z < k.d; z++)
     for (int y = 0; y < k.h; y++)
     for (int x = 0; x < k.w; x++)
@@ -57,7 +71,7 @@ int main ( int argc, char** argv )
         std::cerr << std::endl;
     }
     
-    std::cerr << " afsfasfasfasfasfasfasfasfas" << std::endl;
+    std::cerr << " pooled: " << std::endl;
     
     Pooling pool(Dims(2, 2, 1), Dims2(2, 2));
     
@@ -76,9 +90,4 @@ int main ( int argc, char** argv )
         }
         std::cerr << std::endl;
     }
-    
-    
-    
-    
-    return 0;   
 }

@@ -103,6 +103,7 @@ private:
         }
     }
 public:
+    /*
     Mat3Df convolute(Mat3Df kernel)
     {
         Mat3Df result(w - kernel.w + 1, h - kernel.h + 1, 1);
@@ -115,7 +116,7 @@ public:
             && result.h == h - kernel.h + 1);
         _convolute(kernel, result, z);
         return result;
-    }
+    }*/
     
     template <class Function>
     void apply(Function f, Mat3Df& result)
