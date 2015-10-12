@@ -20,9 +20,9 @@ public:
     }
     
     
-    std::pair<unsigned int, unsigned int> getOutputDims(Mat3Df::Dims input_dims)
+    Mat3Df::Dims2 getOutputDims(Mat3Df::Dims input_dims)
     {
-        return std::make_pair(input_dims.x - kernel.w + 1, input_dims.y - kernel.h + 1);
+        return Mat3Df::Dims2(input_dims.w - kernel.w + 1, input_dims.h - kernel.h + 1);
     }
     
 private:
@@ -43,7 +43,8 @@ private:
 public:
     Mat3Df convolute(Mat3Df& input)
     {
-        Mat3Df result(Mat3Df::Dims(input.w - kernel.w + 1, input.h - kernel.h + 1, 1));
+        Mat3Df::Dims2 out_dims = getOutputDims(input.getDims());
+        Mat3Df result(Mat3Df::Dims(out_dims.w, out_dims.h, 1));
         _convolute(input, result, 0);
         return result;
     }

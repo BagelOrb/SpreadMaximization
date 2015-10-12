@@ -32,13 +32,23 @@ public:
         bool operator==(const Pos& p) const { return x==p.x&&y==p.y&&z==p.z; }
         bool operator!=(const Pos& p) const { return x!=p.x||y!=p.y||z!=p.z; }
     };  
-    struct Dims : public Pos 
+    struct Dims 
     {
-        Dims(unsigned int x, unsigned int y, unsigned int z) 
-        : Pos(x, y, z)
+        const unsigned int w, h, d;
+        Dims(unsigned int w, unsigned int h, unsigned int d) 
+        : w(w), h(h), d(d)
         {
         }
     };
+    struct Dims2
+    {
+        const unsigned int w, h;
+        Dims2(unsigned int w, unsigned int h)
+        : w(w), h(h)
+        {
+        }
+    };
+    
     
     class iterator
     {
@@ -84,7 +94,7 @@ private:
     
 public:
     Mat3Df(Dims dims)
-    : Mat3Df(dims.x, dims.y, dims.z)
+    : Mat3Df(dims.w, dims.h, dims.d)
     {
     };
     
