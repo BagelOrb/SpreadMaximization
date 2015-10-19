@@ -29,7 +29,7 @@ Mat3Df get_test_mat()
     return m;
 }
 
-int main ( int argc, char** argv )
+void test_signalLayer()
 {
     SignalLayer<GradientDescentFunction> layer(Dims(2, 2, 2), 2);
     layer.update_function_params = new GradientDescentParams();
@@ -59,9 +59,19 @@ int main ( int argc, char** argv )
     
     output.debugOut();
     
+    // =======================================================================================
+    
+    Mat3Df out_ders(output.getDims());
+    out_ders.clear(1.0);
+    
+    Mat3Df in_ders(input.getDims());
+    
+    layer.backward(input, output, out_ders, &in_ders);
     
     
-    return 0;   
+    std::cerr << "input derivatives:\n";
+    in_ders.debugOut();
+    
 }
 
 
@@ -98,4 +108,10 @@ void test_convolution()
     r = pool.pool(r);
     
     r.debugOut();
+}
+
+
+int main ( int argc, char** argv )
+{
+    return 0;
 }

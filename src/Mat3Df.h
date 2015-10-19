@@ -199,7 +199,7 @@ public:
     {
         for (Mat3Df::iterator in_it = begin(); in_it != end(); ++in_it)
         {
-            if (in_it.x == 0) 
+            if (in_it != begin() && in_it.x == 0) 
             {
                 std::cerr << std::endl;
                 if (in_it.y == 0) 
