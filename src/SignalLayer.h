@@ -60,11 +60,9 @@ class SignalLayer : public SubLayer
 public:
     
     std::vector<Neuron> neurons;
-//     std::vector<Neuron::State> derivatives;
     
     UpdateFunctionParams* update_function_params; //!< The global parameters to the update function, e.g. weight decay term
     
-//     template<class UpdateFunctionParams_>
     struct NeuronUpdateState
     {
         Mat3D<UpdateFunctionState> weight_params;
@@ -73,10 +71,16 @@ public:
         NeuronUpdateState(Dims conv_field)
         : weight_params(conv_field)
         { }
+        
+        void resetDers()
+        {
+            bias_params.resetDer();
+            for (auto weight_param_it = weight_params.begin(); weight_param_it != weight_params.end(); ++weight_param_it)
+            {
+                weight_param_it->resetDer();
+            }
+        }
     };
-//     template<class T> NeuronUpdateState<T>::NeuronUpdateState(Dims conv_field)
-//     : weight_params(conv_field)
-//     { }
     
     std::vector<NeuronUpdateState> update_function_state; //!< The current state of local parameters for the update function for a single layer parameter
     
@@ -124,6 +128,11 @@ public:
             in_derivatives->apply([](float) { return 0; }); // reset derivatives at input mat to zero
         }
         
+        for (NeuronUpdateState& param_ders : update_function_state)
+        {
+            param_ders.resetDers();
+        }
+        
         for (unsigned int neuron_idx = 0; neuron_idx < neurons.size(); neuron_idx++)
         {
             Neuron& neuron = neurons[neuron_idx];
@@ -131,18 +140,29 @@ public:
             {
 //                 update_function_state->update(neuron.state.bias, *out_it, update_function_params);
                 float neuron_out_der = *out_it;
-                update_function_state[neuron_idx].bias_params.update(neuron.state.bias, neuron_out_der, update_function_params);
+                update_function_state[neuron_idx].bias_params.registerDer(neuron_out_der);
                 for (Mat3Df::iterator weight_it = neuron.state.weights.begin(); weight_it != neuron.state.weights.end(); ++weight_it)
                 {
                     Pos in_pos = out_it.getPos() + weight_it.getPos();
                     float weight_der = neuron_out_der * in.get(in_pos);
-                    update_function_state[neuron_idx].bias_params.update(neuron.state.bias, weight_der, update_function_params);
+                    update_function_state[neuron_idx].weight_params.get(weight_it.getPos()).registerDer(weight_der);
                     if (in_derivatives)
                     {
                         in_derivatives->add(in_pos, neuron_out_der * *weight_it);
                     }
                 }
             }
+        }
+        for (unsigned int neuron_idx = 0; neuron_idx < neurons.size(); neuron_idx++)
+        {
+            Neuron& neuron = neurons[neuron_idx];
+            update_function_state[neuron_idx].bias_params.update(neuron.state.bias, update_function_params);
+            
+            for (Mat3Df::iterator weight_it = neuron.state.weights.begin(); weight_it != neuron.state.weights.end(); ++weight_it)
+            {
+                update_function_state[neuron_idx].weight_params.get(weight_it.getPos()).update(*weight_it, update_function_params);
+            }
+            
         }
     }
 

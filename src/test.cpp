@@ -47,31 +47,34 @@ void test_signalLayer()
     }
     
     Mat3Df input = get_test_mat();
-    input.debugOut();
+    input.debugOut("input");
     
-    std::cerr << "input dims: " << input.w << ", " << input.h << ", " << input.d << "\n";
+//     std::cerr << "input dims: " << input.w << ", " << input.h << ", " << input.d << "\n";
     
     Mat3Df output(layer.getOutputDims(input.getDims()));
     
-    std::cerr << "output dims: " << output.w << ", " << output.h << ", " << output.d << "\n";
+//     std::cerr << "output dims: " << output.w << ", " << output.h << ", " << output.d << "\n";
     
     layer.forward(input, output);
     
-    output.debugOut();
+    output.debugOut("output");
     
     // =======================================================================================
     
     Mat3Df out_ders(output.getDims());
-    out_ders.clear(1.0);
+    out_ders.clear(1.0f);
     
     Mat3Df in_ders(input.getDims());
     
     layer.backward(input, output, out_ders, &in_ders);
     
     
-    std::cerr << "input derivatives:\n";
-    in_ders.debugOut();
+    in_ders.debugOut("input derivatives");
     
+    for (Neuron& neuron : layer.neurons)
+    {
+        neuron.state.weights.debugOut("neuron weights");
+    }
 }
 
 
@@ -113,5 +116,6 @@ void test_convolution()
 
 int main ( int argc, char** argv )
 {
+    test_signalLayer();
     return 0;
 }

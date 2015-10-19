@@ -54,7 +54,18 @@ public:
     iterator end() { return iterator(0,0,d, *this); }
     iterator begin() { return iterator(0,0,0, *this); }
 
+    
 private:
+    bool dont_delete_data = false;
+public:
+    ~Mat3D()
+    {
+        if (!dont_delete_data && data)
+        {
+            delete[] data;
+        }
+    }
+protected:
     Mat3D<F>(unsigned int w, unsigned int h, unsigned int d)
     : w(w), h(h), d(d), size(w*h*d)
     {
@@ -67,18 +78,7 @@ public:
     {
     };
     
-private:
-    bool dont_delete_data = false;
-public:
-    ~Mat3Df()
-    {
-        if (!dont_delete_data && data)
-        {
-            delete[] data;
-        }
-    }
-    
-    Mat3Df& operator=(const Mat3Df& b)
+    Mat3D<F>& operator=(const Mat3D<F>& b)
     {
         w = b.w;
         h = b.h;
@@ -96,14 +96,14 @@ public:
     /*!
      * Copy constructor
      */
-    Mat3Df(const Mat3Df& b) 
+    Mat3D<F>(const Mat3D<F>& b) 
     : w(b.w)
     , h(b.h)
     , d(b.d)
     , size(b.size)
     {
         std::cerr << "Warning! expensive Mat3Df copy!\n";
-        data = new float[w*h*d];
+        data = new F[w*h*d];
         for (unsigned int idx = 0; idx < size; idx++)
         {
             data[idx] = b.data[idx];
@@ -113,7 +113,7 @@ public:
     /*!
      * Move 'constructor'
      */
-    Mat3Df(Mat3Df&& from)
+    Mat3D<F>(Mat3D<F>&& from)
     : w(from.w)
     , h(from.h)
     , d(from.d)

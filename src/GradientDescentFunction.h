@@ -13,7 +13,7 @@ public:
 class GradientDescentFunction : public UpdateFunctionState
 {
 public:
-    void update(float& param, float der, UpdateFunctionParams* params)
+    void update(float& param, UpdateFunctionParams* params)
     {
         param += der * static_cast<GradientDescentParams*>(params)->delta;
     }

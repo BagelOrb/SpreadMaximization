@@ -9,7 +9,13 @@ class UpdateFunctionParams
 class UpdateFunctionState 
 {
 public:
-    virtual void update(float& param, float der, UpdateFunctionParams* params) = 0;
+    float der;
+    void resetDer() { der = 0.0; }
+    virtual void registerDer(float der_here)
+    {
+        der += der_here;
+    }
+    virtual void update(float& param, UpdateFunctionParams* params) = 0;
 };
 
 #endif // UPDATE_FUNCTION_H
