@@ -7,13 +7,13 @@
 #include <iostream> // debug
 
 #include "SubLayer.h"
-#include "Mat3Df.h"
-#include "Convolution.h"
+#include "utils/Mat3Df.h"
+#include "utils/Convolution.h"
 #include "Pos.h"
 
-#include "Mat3D.h"
+#include "utils/Mat3D.h"
 
-#include "UpdateFunction.h"
+#include "learning/GradientDescentFunction.h"
 
 struct Neuron 
 {

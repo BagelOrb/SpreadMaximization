@@ -6,7 +6,7 @@
 #include <iostream> // debug
 
 #include "Pos.h"
-#include "Mat3Df.h"
+#include "utils/Mat3Df.h"
 
 class Convolution 
 {

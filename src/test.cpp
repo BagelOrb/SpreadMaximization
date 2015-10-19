@@ -3,14 +3,14 @@
 #include <stdio.h>
 #include <iostream> // std::cerr
 
-#include "Mat3Df.h"
-#include "Convolution.h"
+#include "utils/Mat3Df.h"
+#include "utils/Convolution.h"
 #include "Pooling.h"
 #include "Pos.h"
 
 #include "SignalLayer.h"
 
-#include "GradientDescentFunction.h"
+#include "learning/GradientDescentFunction.h"
 
 Mat3Df get_test_mat()
 {
