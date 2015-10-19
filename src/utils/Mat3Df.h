@@ -10,6 +10,7 @@
 
 
 #include "Pos.h"
+#include "utils/Dims.h"
 
 
 class Mat3Df : public Mat3D<float>

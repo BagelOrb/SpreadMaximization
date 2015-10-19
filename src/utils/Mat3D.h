@@ -8,6 +8,7 @@
 #include "debug.h"
 
 #include "Pos.h"
+#include "Dims.h"
 
 template <typename F>
 class Mat3D

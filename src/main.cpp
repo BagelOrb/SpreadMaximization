@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <iostream> // std::cerr
 
-#include "Mat3Df.h"
-#include "debug.h"
+#include "utils/Mat3Df.h"
+#include "utils/debug.h"
 
 int main ( int argc, char** argv )
 {

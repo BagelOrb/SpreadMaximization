@@ -6,8 +6,9 @@
 #include <cmath> // tanh
 #include <math.h>       /* exp */
 
-#include "Pos.h"
-#include "Mat3Df.h"
+#include "utils/Pos.h"
+#include "utils/Dims.h"
+#include "utils/Mat3Df.h"
 
 class Layer
 {

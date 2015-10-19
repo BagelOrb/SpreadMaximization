@@ -7,6 +7,7 @@
 #include "utils/Convolution.h"
 #include "Pooling.h"
 #include "utils/Pos.h"
+#include "utils/Dims.h"
 
 #include "SignalLayer.h"
 
@@ -14,6 +15,9 @@
 
 #include "TransferLayer.h"
 #include "TransferFunction.h"
+
+#include "PoolingFunction.h"
+#include "PoolingLayer.h"
 
 Mat3Df get_test_mat()
 {
@@ -144,9 +148,38 @@ void test_transferLayer()
 
 
 
+void test_poolingLayer()
+{
+    Mat3Df input = get_test_mat();
+    input.debugOut("input");
+    
+    PoolingLayer<MaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
+    
+    Mat3Df output(layer.getOutputDims(input.getDims()));
+    
+    layer.forward(input, output);
+    
+    output.debugOut("output");
+    
+    // =======================================================================================
+    
+    Mat3Df out_ders(output.getDims());
+    out_ders.clear(1.0f);
+    
+    Mat3Df in_ders(input.getDims());
+    
+    layer.backward(input, output, out_ders, &in_ders);
+    
+    
+    in_ders.debugOut("input derivatives");
+}
+
+
+
 int main ( int argc, char** argv )
 {
 //     test_signalLayer();
-    test_transferLayer();
+//     test_transferLayer();
+    test_poolingLayer();
     return 0;
 }
