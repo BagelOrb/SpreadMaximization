@@ -153,7 +153,7 @@ void test_poolingLayer()
     Mat3Df input = get_test_mat();
     input.debugOut("input");
     
-    PoolingLayer<MaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
+    PoolingLayer<SoftAbsMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
     
     Mat3Df output(layer.getOutputDims(input.getDims()));
     
