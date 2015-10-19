@@ -6,7 +6,7 @@
 #include "utils/Mat3Df.h"
 #include "utils/Convolution.h"
 #include "Pooling.h"
-#include "Pos.h"
+#include "utils/Pos.h"
 
 #include "SignalLayer.h"
 

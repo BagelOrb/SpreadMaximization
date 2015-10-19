@@ -9,7 +9,7 @@
 #include "SubLayer.h"
 #include "utils/Mat3Df.h"
 #include "utils/Convolution.h"
-#include "Pos.h"
+#include "utils/Pos.h"
 
 #include "utils/Mat3D.h"
 

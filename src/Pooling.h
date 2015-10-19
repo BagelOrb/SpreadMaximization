@@ -5,7 +5,7 @@
 #include <limits>
 #include <iostream> // temp
 
-#include "Pos.h"
+#include "utils/Pos.h"
 #include "utils/Mat3Df.h"
 
 class Pooling 
