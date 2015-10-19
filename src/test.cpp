@@ -12,6 +12,9 @@
 
 #include "learning/GradientDescentFunction.h"
 
+#include "TransferLayer.h"
+#include "TransferFunction.h"
+
 Mat3Df get_test_mat()
 {
     int w = 5;
@@ -27,6 +30,41 @@ Mat3Df get_test_mat()
         i++;
     }
     return m;
+}
+
+void test_convolution()
+{
+    Mat3Df m = get_test_mat();
+    
+    Mat3Df k(Dims(2, 2, 2));
+    Convolution conv(k);
+    for (int z = 0; z < k.d; z++)
+    for (int y = 0; y < k.h; y++)
+    for (int x = 0; x < k.w; x++)
+    {
+        k.set(x,y,z, 0);
+        if (x == 0 && y == 0 && z == 0)
+            k.set(x,y,z, 1);
+    }
+
+    auto func = [](float in) 
+    { 
+//         std::cerr << "sdg " <<std::endl; 
+        return in + 1; 
+    };
+    
+    Mat3Df r = conv.convolute(m).apply(func );
+//     r = r.apply([](float in) {return in -1; } );
+    
+    r.debugOut();
+    
+    std::cerr << " pooled: " << std::endl;
+    
+    Pooling pool(Dims(2, 2, 1), Dims2(2, 2));
+    
+    r = pool.pool(r);
+    
+    r.debugOut();
 }
 
 void test_signalLayer()
@@ -77,45 +115,38 @@ void test_signalLayer()
     }
 }
 
-
-void test_convolution()
+void test_transferLayer()
 {
-    Mat3Df m = get_test_mat();
+    Mat3Df input = get_test_mat();
+    input.debugOut("input");
     
-    Mat3Df k(Dims(2, 2, 2));
-    Convolution conv(k);
-    for (int z = 0; z < k.d; z++)
-    for (int y = 0; y < k.h; y++)
-    for (int x = 0; x < k.w; x++)
-    {
-        k.set(x,y,z, 0);
-        if (x == 0 && y == 0 && z == 0)
-            k.set(x,y,z, 1);
-    }
-
-    auto func = [](float in) 
-    { 
-//         std::cerr << "sdg " <<std::endl; 
-        return in + 1; 
-    };
+    SigmoidTransferFunction transfer_function;
+    TransferLayer layer(transfer_function);
     
-    Mat3Df r = conv.convolute(m).apply(func );
-//     r = r.apply([](float in) {return in -1; } );
+    Mat3Df output(layer.getOutputDims(input.getDims()));
     
-    r.debugOut();
+    layer.forward(input, output);
     
-    std::cerr << " pooled: " << std::endl;
+    output.debugOut("output");
     
-    Pooling pool(Dims(2, 2, 1), Dims2(2, 2));
+    // =======================================================================================
     
-    r = pool.pool(r);
+    Mat3Df out_ders(output.getDims());
+    out_ders.clear(1.0f);
     
-    r.debugOut();
+    Mat3Df in_ders(input.getDims());
+    
+    layer.backward(input, output, out_ders, &in_ders);
+    
+    
+    in_ders.debugOut("input derivatives");
 }
+
 
 
 int main ( int argc, char** argv )
 {
-    test_signalLayer();
+//     test_signalLayer();
+    test_transferLayer();
     return 0;
 }
