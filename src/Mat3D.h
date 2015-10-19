@@ -3,6 +3,8 @@
 
 
 #include <cassert> // assert
+#include <iostream> // debug
+
 #include "debug.h"
 
 #include "Pos.h"
@@ -43,8 +45,7 @@ public:
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
         F& operator*() { return mat.data[mat.w*mat.h* z + mat.w* y + x]; }
         F* operator->() { return &*(*this); }
-//         Pos operator+(iterator other) { return Pos(x+other.x, y+other.y, z+other.z); }
-//         Pos getPos() { return Pos(x,y,z); }
+        Pos getPos() { return Pos(x,y,z); }
         bool operator==(iterator other) { return &mat == &other.mat && x == other.x && y == other.y && z == other.z; }
         bool operator!=(iterator other) { return !(*this == other); }
         
@@ -66,6 +67,61 @@ public:
     {
     };
     
+private:
+    bool dont_delete_data = false;
+public:
+    ~Mat3Df()
+    {
+        if (!dont_delete_data && data)
+        {
+            delete[] data;
+        }
+    }
+    
+    Mat3Df& operator=(const Mat3Df& b)
+    {
+        w = b.w;
+        h = b.h;
+        d = b.d;
+        size = b.size;
+        std::cerr << "Warning! expensive Mat3Df assignment!\n";
+        data = new float[w*h*d];
+        for (unsigned int idx = 0; idx < size; idx++)
+        {
+            data[idx] = b.data[idx];
+        }
+        return *this;
+    }
+    
+    /*!
+     * Copy constructor
+     */
+    Mat3Df(const Mat3Df& b) 
+    : w(b.w)
+    , h(b.h)
+    , d(b.d)
+    , size(b.size)
+    {
+        std::cerr << "Warning! expensive Mat3Df copy!\n";
+        data = new float[w*h*d];
+        for (unsigned int idx = 0; idx < size; idx++)
+        {
+            data[idx] = b.data[idx];
+        }
+    }
+    
+    /*!
+     * Move 'constructor'
+     */
+    Mat3Df(Mat3Df&& from)
+    : w(from.w)
+    , h(from.h)
+    , d(from.d)
+    , size(from.size)
+    , data(from.data)
+    {
+        from.dont_delete_data;
+    }
     Dims getDims()
     {
         return Dims(w, h, d);

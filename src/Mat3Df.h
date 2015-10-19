@@ -14,6 +14,7 @@
 
 class Mat3Df
 {
+
 private:
 public:
     float* data;
@@ -195,8 +196,9 @@ public:
         apply(f, result);
         return result;
     }
-    void debugOut()
+    void debugOut(std::string name = "")
     {
+        std::cerr << name << ": " << std::endl;
         for (Mat3Df::iterator in_it = begin(); in_it != end(); ++in_it)
         {
             if (in_it != begin() && in_it.x == 0) 
