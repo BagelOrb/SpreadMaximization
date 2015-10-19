@@ -36,6 +36,7 @@ int main ( int argc, char** argv )
     for (Mat3Df::iterator it = r.begin(); it != r.end(); ++it)
         std::cerr << ((it.x == 0)? "\n" : std::string("\t")) << *it;
     
+    std::cerr << "main.cpp::main\n";
     
     return 0;   
 }

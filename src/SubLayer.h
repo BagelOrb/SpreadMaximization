@@ -9,7 +9,10 @@ class SubLayer
 {
     virtual void initializeParams(std::function<float(float)> func) = 0;
     virtual void forward(Mat3Df& in, Mat3Df& out) = 0;
-    virtual void backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat3Df& in_derivatives) = 0;
+    /*!
+     * When no @p in_derivatives is given, the derivatives are only back propagated to the weights and not the inputs
+     */
+    virtual void backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat3Df* in_derivatives) = 0;
 };
 
 #endif // SUB_LAYER_H

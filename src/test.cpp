@@ -10,18 +10,9 @@
 
 #include "SignalLayer.h"
 
-int main ( int argc, char** argv )
-{
-    
-    
-    
-    
-    
-    return 0;   
-}
+#include "GradientDescentFunction.h"
 
-
-void test_convolution()
+Mat3Df get_test_mat()
 {
     int w = 5;
     int h = 5;
@@ -35,8 +26,48 @@ void test_convolution()
         m.set(x,y,z, i);
         i++;
     }
+    return m;
+}
 
+int main ( int argc, char** argv )
+{
+    SignalLayer<GradientDescentFunction> layer(Dims(2, 2, 2), 2);
+    layer.update_function_params = new GradientDescentParams();
+    {
+        layer.neurons[0].state.bias = 0.0;
+        Mat3Df& k = layer.neurons[0].state.weights;
+        k.apply([](float) { return 0; } );
+        k.set(0,0,0, 1.0);
+    }
+    {
+        layer.neurons[1].state.bias = 0.0;
+        Mat3Df& k = layer.neurons[1].state.weights;
+        k.apply([](float) { return 0; } );
+        k.set(1,1,1, 1.0);
+    }
     
+    Mat3Df input = get_test_mat();
+    input.debugOut();
+    
+    std::cerr << "input dims: " << input.w << ", " << input.h << ", " << input.d << "\n";
+    
+    Mat3Df output(layer.getOutputDims(input.getDims()));
+    
+    std::cerr << "output dims: " << output.w << ", " << output.h << ", " << output.d << "\n";
+    
+    layer.forward(input, output);
+    
+    output.debugOut();
+    
+    
+    
+    return 0;   
+}
+
+
+void test_convolution()
+{
+    Mat3Df m = get_test_mat();
     
     Mat3Df k(Dims(2, 2, 2));
     Convolution conv(k);
@@ -58,18 +89,7 @@ void test_convolution()
     Mat3Df r = conv.convolute(m).apply(func );
 //     r = r.apply([](float in) {return in -1; } );
     
-    for (int z = 0; z < r.d; z++)
-    {
-        for (int y = 0; y < r.h; y++)
-        {
-            for (int x = 0; x < r.w; x++)
-            {
-                std::cerr << r.get(x,y,z) << "\t"; 
-            }
-            std::cerr << std::endl;
-        }
-        std::cerr << std::endl;
-    }
+    r.debugOut();
     
     std::cerr << " pooled: " << std::endl;
     
@@ -77,17 +97,5 @@ void test_convolution()
     
     r = pool.pool(r);
     
-    
-    for (int z = 0; z < r.d; z++)
-    {
-        for (int y = 0; y < r.h; y++)
-        {
-            for (int x = 0; x < r.w; x++)
-            {
-                std::cerr << r.get(x,y,z) << "\t"; 
-            }
-            std::cerr << std::endl;
-        }
-        std::cerr << std::endl;
-    }
+    r.debugOut();
 }

@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+#include <iostream> // debug
+
 #include "Pos.h"
 #include "Mat3Df.h"
 
@@ -12,7 +14,7 @@ public:
     Mat3Df& kernel;
     Convolution(Mat3Df& kernel)
     : kernel(kernel)
-    {  
+    {
     }
     
     
@@ -26,12 +28,14 @@ private:
     void _convolute(Mat3Df& input, Mat3Df& result, unsigned int z)
     {
         assert(kernel.w <= input.w && kernel.h <= input.h && kernel.d <= input.d);
-        for (Mat3Df::iterator res_it = result.begin(); res_it != Mat3Df::iterator(0,0,1,result); ++res_it)
+        for (Mat3Df::iterator res_it_xy = result.begin(); res_it_xy != Mat3Df::iterator(0,0,1,result); ++res_it_xy)
         {
+            Mat3Df::iterator res_it(res_it_xy);
+            res_it.z = z;
             *res_it = 0;
             for (Mat3Df::iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
-                Pos dataPos = res_it + k_it;
+                Pos dataPos = res_it_xy + k_it;
                 result.add(res_it, input.get(dataPos) * *k_it);
             }
         }
@@ -44,12 +48,11 @@ public:
         _convolute(input, result, 0);
         return result;
     }
-    Mat3Df convolute(Mat3Df& input, Mat3Df& result, unsigned int z)
+    void convolute(Mat3Df& input, Mat3Df& result, unsigned int z)
     {
         assert(result.w == input.w - kernel.w + 1 
             && result.h == input.h - kernel.h + 1);
         _convolute(input, result, z);
-        return result;
     }
     
     
