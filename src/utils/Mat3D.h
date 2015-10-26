@@ -21,12 +21,12 @@ public:
     
 public:
     
-    class iterator : public Pos
+    class iterator : public Pos3
     {
     public:
 //         unsigned int x, y, z;
         Mat3D<F>& mat;
-        iterator(unsigned int x, unsigned int y, unsigned int z, Mat3D<F>& mat) : Pos(x, y, z), mat(mat) { }
+        iterator(unsigned int x, unsigned int y, unsigned int z, Mat3D<F>& mat) : Pos3(x, y, z), mat(mat) { }
         friend class Mat3Df;
         iterator& operator++() 
         {
@@ -46,7 +46,7 @@ public:
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
         F& operator*() { return mat.data[mat.w*mat.h* z + mat.w* y + x]; }
         F* operator->() { return &*(*this); }
-        Pos getPos() { return Pos(x,y,z); }
+        Pos3 getPos() { return Pos3(x,y,z); }
         bool operator==(iterator other) { return &mat == &other.mat && x == other.x && y == other.y && z == other.z; }
         bool operator!=(iterator other) { return !(*this == other); }
         
@@ -74,7 +74,7 @@ protected:
     }
     
 public:
-    Mat3D<F>(Dims dims)
+    Mat3D<F>(Dims3 dims)
     : Mat3D<F>(dims.w, dims.h, dims.d)
     {
     };
@@ -123,9 +123,9 @@ public:
     {
         from.dont_delete_data;
     }
-    Dims getDims()
+    Dims3 getDims()
     {
-        return Dims(w, h, d);
+        return Dims3(w, h, d);
     }
     
     void clear(F& val)
@@ -138,12 +138,12 @@ public:
         assert(x<w && y<h && z<d);
         return data[w*h* z + w* y + x];
     }
-    F& get(Pos p) { return get(p.x, p.y, p.z); }
+    F& get(Pos3 p) { return get(p.x, p.y, p.z); }
     void set(unsigned int x, unsigned int y, unsigned int z, F& val)
     {
         data[w*h* z + w* y + x] = val;
     }
-    void set(Pos p, F& val) { return set(p.x, p.y, p.z, val); };
+    void set(Pos3 p, F& val) { return set(p.x, p.y, p.z, val); };
 private:
     
     void _convolute(Mat3D<F>& kernel, Mat3D<F>& result, unsigned int z)
@@ -154,7 +154,7 @@ private:
             *res_it = 0;
             for (iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
-                Pos dataPos = res_it + k_it;
+                Pos3 dataPos = res_it + k_it;
                 result.add(res_it, get(dataPos) * *k_it);
             }
         }

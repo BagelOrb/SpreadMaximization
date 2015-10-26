@@ -34,9 +34,9 @@ public:
         // no params
     }
     
-    Dims getOutputDims(Dims input_dims)
+    Dims3 getOutputDims(Dims3 input_dims)
     {
-        return Dims((input_dims.w - field_size.w) / skip.w + 1, (input_dims.h - field_size.h) / skip.h + 1, input_dims.d);
+        return Dims3((input_dims.w - field_size.w) / skip.w + 1, (input_dims.h - field_size.h) / skip.h + 1, input_dims.d);
     }
     
     void forward(Mat3Df& in, Mat3Df& out); // defined in PoolingLayerImpl.h

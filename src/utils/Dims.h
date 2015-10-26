@@ -3,30 +3,30 @@
 
 #include "Pos.h"
     
-class Dims 
+class Dims3 
 {
 public:
     const unsigned int w, h, d;
-    Dims(unsigned int w, unsigned int h, unsigned int d) 
+    Dims3(unsigned int w, unsigned int h, unsigned int d) 
     : w(w), h(h), d(d)
     {
     }
-    bool operator==(const Dims& p) const { return w==p.w&&h==p.h&&d==p.d; }
-    bool operator!=(const Dims& p) const { return w!=p.w||h!=p.h||d!=p.d; }
-    struct iterator : public Pos
+    bool operator==(const Dims3& p) const { return w==p.w&&h==p.h&&d==p.d; }
+    bool operator!=(const Dims3& p) const { return w!=p.w||h!=p.h||d!=p.d; }
+    struct iterator : public Pos3
     {
-        Dims& dims;
+        Dims3& dims;
         
-        iterator(unsigned int x, unsigned int y, unsigned int z, Dims& dims) 
-        : Pos(x, y, z)
+        iterator(unsigned int x, unsigned int y, unsigned int z, Dims3& dims) 
+        : Pos3(x, y, z)
         , dims(dims) 
         { }
         
         iterator& operator++();
         
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
-        Pos& operator*() { return *this; }
-        Pos* operator->() { return &*(*this); }
+        Pos3& operator*() { return *this; }
+        Pos3* operator->() { return &*(*this); }
         bool operator==(iterator other) { return &dims == &other.dims && x == other.x && y == other.y && z == other.z; }
         bool operator!=(iterator other) { return !(*this == other); }
     };
@@ -43,20 +43,20 @@ public:
     }
     bool operator==(const Dims2& p) const { return w==p.w&&h==p.h; }
     bool operator!=(const Dims2& p) const { return w!=p.w||h!=p.h; }
-    struct iterator : public Pos
+    struct iterator : public Pos3
     {
         Dims2& dims;
         
         iterator(unsigned int x, unsigned int y, Dims2& dims) 
-        : Pos(x, y, 0)
+        : Pos3(x, y, 0)
         , dims(dims) 
         { }
         
         iterator& operator++();
         
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
-        Pos& operator*() { return *this; }
-        Pos* operator->() { return &*(*this); }
+        Pos3& operator*() { return *this; }
+        Pos3* operator->() { return &*(*this); }
         bool operator==(iterator other) { return &dims == &other.dims && x == other.x && y == other.y && z == other.z; }
         bool operator!=(iterator other) { return !(*this == other); }
     };
@@ -66,9 +66,9 @@ public:
 
 
 
-Pos operator *(Pos a, Dims2 b);
+Pos3 operator *(Pos3 a, Dims2 b);
 
-Dims operator +(Dims a, Dims2 b);
+Dims3 operator +(Dims3 a, Dims2 b);
 
 
 

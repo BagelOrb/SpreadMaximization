@@ -18,7 +18,7 @@ public:
     
     void initializeParams(std::function<float(float)>) { } // there are no params
     
-    Dims getOutputDims(Dims input_dims)
+    Dims3 getOutputDims(Dims3 input_dims)
     {
         return input_dims;
     }

@@ -32,7 +32,7 @@ public:
         Mat3D<UpdateFunctionState> weight_params;
         UpdateFunctionState bias_params;
         
-        NeuronUpdateState(Dims conv_field)
+        NeuronUpdateState(Dims3 conv_field)
         : weight_params(conv_field)
         { }
         
@@ -48,7 +48,7 @@ public:
     
     std::vector<NeuronUpdateState> update_function_state; //!< The current state of local parameters for the update function for a single layer parameter
     
-    SignalLayer(Dims conv_field, unsigned int n_neurons)
+    SignalLayer(Dims3 conv_field, unsigned int n_neurons)
     : update_function_params(nullptr)
     {
         neurons.reserve(n_neurons);
@@ -60,7 +60,7 @@ public:
         }
     }
     
-    Dims getOutputDims(Dims input_dims);
+    Dims3 getOutputDims(Dims3 input_dims);
     
     void initializeParams(std::function<float(float)> func);
     

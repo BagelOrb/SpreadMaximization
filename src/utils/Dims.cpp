@@ -1,6 +1,6 @@
 #include "Dims.h"
 
-Dims::iterator& Dims::iterator::operator++() 
+Dims3::iterator& Dims3::iterator::operator++() 
 {
     x++;
     if (x == dims.w) 
@@ -27,13 +27,13 @@ Dims2::iterator& Dims2::iterator::operator++()
     return *this;
 }
 
-Pos operator *(Pos a, Dims2 b)
+Pos3 operator *(Pos3 a, Dims2 b)
 {
-    return Pos(a.x * b.w, a.y * b.h, a.z);
+    return Pos3(a.x * b.w, a.y * b.h, a.z);
 }
 
-Dims operator +(Dims a, Dims2 b)
+Dims3 operator +(Dims3 a, Dims2 b)
 {
-    return Dims(a.w + b.w, a.h + b.h, a.d);
+    return Dims3(a.w + b.w, a.h + b.h, a.d);
 }
 

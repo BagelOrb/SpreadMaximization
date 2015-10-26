@@ -22,7 +22,7 @@ protected:
     }
     
 public:
-    Mat3Df(Dims dims)
+    Mat3Df(Dims3 dims)
     : Mat3D<float>(dims)
     {
     };
@@ -52,10 +52,10 @@ public:
     
     void clear(float val = 0.0) { Mat3D<float>::clear(val); }
     
-    void set(Pos p, float val) { Mat3D<float>::set(p, val); };
+    void set(Pos3 p, float val) { Mat3D<float>::set(p, val); };
     void set(unsigned int x, unsigned int y, unsigned int z, float val) { Mat3D<float>::set(x,y,z, val); }
     
-    void add(Pos p, float val) { data[w*h* p.z + w* p.y + p.x] += val; };
+    void add(Pos3 p, float val) { data[w*h* p.z + w* p.y + p.x] += val; };
     void add(unsigned int x, unsigned int y, unsigned int z, float val) { data[w*h* z + w* y + x] += val; };
     
     template <class Function>

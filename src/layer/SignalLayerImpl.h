@@ -4,11 +4,11 @@
 #include "SignalLayer.h"
 
 template<class UpdateFunctionState>
-Dims SignalLayer<UpdateFunctionState>::getOutputDims(Dims input_dims)
+Dims3 SignalLayer<UpdateFunctionState>::getOutputDims(Dims3 input_dims)
 {
     assert(neurons.size() > 0);
     Dims2 conv_out_dims = neurons[0].conv.getOutputDims(input_dims);
-    return Dims(conv_out_dims.w, conv_out_dims.h, neurons.size());
+    return Dims3(conv_out_dims.w, conv_out_dims.h, neurons.size());
 }
 
 template<class UpdateFunctionState>
@@ -55,7 +55,7 @@ void SignalLayer<UpdateFunctionState>::backward(Mat3Df& in, Mat3Df& out, Mat3Df&
             update_function_state[neuron_idx].bias_params.registerDer(neuron_out_der);
             for (Mat3Df::iterator weight_it = neuron.state.weights.begin(); weight_it != neuron.state.weights.end(); ++weight_it)
             {
-                Pos in_pos = out_it.getPos() + weight_it.getPos();
+                Pos3 in_pos = out_it.getPos() + weight_it.getPos();
                 float weight_der = neuron_out_der * in.get(in_pos);
                 update_function_state[neuron_idx].weight_params.get(weight_it.getPos()).registerDer(weight_der);
                 if (in_derivatives)

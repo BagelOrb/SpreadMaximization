@@ -12,19 +12,19 @@
 class Pooling 
 {
 public:
-    Dims pool_size;
+    Dims3 pool_size;
     Dims2 skip;
     
-    Pooling(Dims dims, Dims2 skip)
+    Pooling(Dims3 dims, Dims2 skip)
     : pool_size(dims)
     , skip(skip)
     { 
     }
     
     
-    Dims getOutputDims(Dims input_dims)
+    Dims3 getOutputDims(Dims3 input_dims)
     {
-        return Dims((input_dims.w - pool_size.w) / skip.w + 1, (input_dims.h - pool_size.h) / skip.h + 1, input_dims.d);
+        return Dims3((input_dims.w - pool_size.w) / skip.w + 1, (input_dims.h - pool_size.h) / skip.h + 1, input_dims.d);
     }
     
 private:
@@ -41,9 +41,9 @@ private:
     void _poolMax(Mat3Df& input, Mat3Df& result, Mat3Df::iterator res_it)
     {
         *res_it = std::numeric_limits<float>::lowest();
-        for (Dims::iterator k_it = pool_size.begin(); k_it != pool_size.end(); ++k_it)
+        for (Dims3::iterator k_it = pool_size.begin(); k_it != pool_size.end(); ++k_it)
         {
-            Pos dataPos = res_it * skip + k_it;
+            Pos3 dataPos = res_it * skip + k_it;
             *res_it = std::max(*res_it, input.get(dataPos));
         }
     }

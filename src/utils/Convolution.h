@@ -19,7 +19,7 @@ public:
     }
     
     
-    Dims2 getOutputDims(Dims input_dims)
+    Dims2 getOutputDims(Dims3 input_dims)
     {
         return Dims2(input_dims.w - kernel.w + 1, input_dims.h - kernel.h + 1);
     }
@@ -36,7 +36,7 @@ private:
             *res_it = 0;
             for (Mat3Df::iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
             {
-                Pos dataPos = res_it_xy + k_it;
+                Pos3 dataPos = res_it_xy + k_it;
                 result.add(res_it, input.get(dataPos) * *k_it);
             }
         }
@@ -45,7 +45,7 @@ public:
     Mat3Df convolute(Mat3Df& input)
     {
         Dims2 out_dims = getOutputDims(input.getDims());
-        Mat3Df result(Dims(out_dims.w, out_dims.h, 1));
+        Mat3Df result(Dims3(out_dims.w, out_dims.h, 1));
         _convolute(input, result, 0);
         return result;
     }

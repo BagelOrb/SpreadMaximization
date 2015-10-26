@@ -26,7 +26,7 @@ Mat3Df get_test_mat()
     int w = 5;
     int h = 5;
     int d = 3;
-    Mat3Df m(Dims(w,h,d));
+    Mat3Df m(Dims3(w,h,d));
     float i = 0;
     for (int z = 0; z < d; z++)
     for (int y = 0; y < h; y++)
@@ -43,7 +43,7 @@ Mat3Df get_test_mat_rand()
     int w = 5;
     int h = 5;
     int d = 3;
-    Mat3Df m(Dims(w,h,d));
+    Mat3Df m(Dims3(w,h,d));
     float i = 0;
     for (int z = 0; z < d; z++)
     for (int y = 0; y < h; y++)
@@ -59,7 +59,7 @@ void test_convolution()
 {
     Mat3Df m = get_test_mat();
     
-    Mat3Df k(Dims(2, 2, 2));
+    Mat3Df k(Dims3(2, 2, 2));
     Convolution conv(k);
     for (int z = 0; z < k.d; z++)
     for (int y = 0; y < k.h; y++)
@@ -83,7 +83,7 @@ void test_convolution()
     
     std::cerr << " pooled: " << std::endl;
     
-    Pooling pool(Dims(2, 2, 1), Dims2(2, 2));
+    Pooling pool(Dims3(2, 2, 1), Dims2(2, 2));
     
     r = pool.pool(r);
     
@@ -92,7 +92,7 @@ void test_convolution()
 
 void test_signalLayer()
 {
-    SignalLayer<GradientDescentFunction> layer(Dims(2, 2, 2), 2);
+    SignalLayer<GradientDescentFunction> layer(Dims3(2, 2, 2), 2);
     layer.update_function_params = new GradientDescentParams();
     {
         layer.neurons[0].state.bias = 0.0;

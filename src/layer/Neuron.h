@@ -11,7 +11,7 @@ struct Neuron
         Mat3Df weights;
         float bias;
         
-        State(Dims conv_field)
+        State(Dims3 conv_field)
         : weights(conv_field)
         {
         }
@@ -24,7 +24,7 @@ struct Neuron
     State state;
     Convolution conv;
     
-    Neuron(Dims conv_field)
+    Neuron(Dims3 conv_field)
     : state(conv_field)
     , conv(state.weights)
     {
