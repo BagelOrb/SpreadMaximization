@@ -82,7 +82,7 @@ float SoftArgMaxPoolingFunction::add_ders(Mat3Df& ins, Pos lu_start_pos, Dims2 f
         Pos in_pos = lu_start_pos + pool_pos;
         float weighted_weight = weights->get(pool_pos) / total_weight; // c_n
         float in = ins.get(in_pos);
-        float df_din = inner_function.der(in);
+        float df_din = hardness * inner_function.der(in);
         in_ders.add(in_pos, out_der * weighted_weight * ( 1.0 + df_din * (in - out)));
     }
 }
