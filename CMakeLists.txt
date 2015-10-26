@@ -10,8 +10,11 @@ endif()
 
 set(SRCS
 #     src/main.cpp
-    src/test.cpp
 #     src/DisplayImage.cpp
+    src/test.cpp
+    src/utils/Dims.cpp
+    src/layer/PoolingLayerImpl.h
+    src/layer/PoolingFunction.cpp
 )
 
 
@@ -20,9 +23,9 @@ find_package( OpenCV REQUIRED )
 # set(OpenCV_DIR /usr/local/lib)
 
 
-include_directories(src)
+# include_directories(src)
 add_executable( SpreadMaximization ${SRCS} )
 target_link_libraries( SpreadMaximization ${OpenCV_LIBS} )
-add_subdirectory(src/utils)
-add_subdirectory(src/learning)
-add_subdirectory(src/layer)
+# add_subdirectory(src/utils)
+# add_subdirectory(src/learning)
+# add_subdirectory(src/layer)

@@ -22,21 +22,8 @@ public:
         , dims(dims) 
         { }
         
-        iterator& operator++() 
-        {
-            x++;
-            if (x == dims.w) 
-            {
-                x = 0;
-                y++;
-                if (y == dims.h)
-                {
-                    y = 0;
-                    z++;
-                }
-            }
-            return *this;
-        }
+        iterator& operator++();
+        
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
         Pos& operator*() { return *this; }
         Pos* operator->() { return &*(*this); }
@@ -65,16 +52,8 @@ public:
         , dims(dims) 
         { }
         
-        iterator& operator++() 
-        {
-            x++;
-            if (x == dims.w) 
-            {
-                x = 0;
-                y++;
-            }
-            return *this;
-        }
+        iterator& operator++();
+        
         iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
         Pos& operator*() { return *this; }
         Pos* operator->() { return &*(*this); }
@@ -87,15 +66,9 @@ public:
 
 
 
-Pos operator *(Pos a, Dims2 b)
-{
-    return Pos(a.x * b.w, a.y * b.h, a.z);
-}
+Pos operator *(Pos a, Dims2 b);
 
-Dims operator +(Dims a, Dims2 b)
-{
-    return Dims(a.w + b.w, a.h + b.h, a.d);
-}
+Dims operator +(Dims a, Dims2 b);
 
 
 
