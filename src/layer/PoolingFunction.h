@@ -114,7 +114,41 @@ public:
     SoftSquareMaxPoolingFunction()
     : SoftArgMaxPoolingFunction(_inner_function)
     {
-        hardness = 1.0;
+        hardness = 0.1;
+    }
+};
+
+class SoftSquareMaxPoolingFunction2 : public SoftArgMaxPoolingFunction
+{
+    class Square2 : public DifferentiableFunction
+    {
+    public:
+        float apply(float in) { return in * in - 10; }
+        float der(float in) { return .5* in; }
+    };
+    Square2 _inner_function;
+public:
+    SoftSquareMaxPoolingFunction2()
+    : SoftArgMaxPoolingFunction(_inner_function)
+    {
+        hardness = 0.1;
+    }
+};
+
+class SoftAbsMaxPoolingFunction2 : public SoftArgMaxPoolingFunction
+{
+    class Square2 : public DifferentiableFunction
+    {
+    public:
+        float apply(float in) { return std::abs(in) - 10; }
+        float der(float in) { return (in > 0)? 1 : -1; }
+    };
+    Square2 _inner_function;
+public:
+    SoftAbsMaxPoolingFunction2()
+    : SoftArgMaxPoolingFunction(_inner_function)
+    {
+        hardness = 0.1;
     }
 };
 
