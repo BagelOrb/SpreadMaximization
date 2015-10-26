@@ -112,6 +112,20 @@ void test_signalLayer()
     
     output.debugOut("output");
     
+    for (Mat3Df::iterator out_it = output.begin(); out_it != output.end(); ++out_it)
+    {
+        if (out_it.z == 0)
+        {
+            assert(*out_it == input.get(out_it.getPos()));
+        }
+        else if (out_it.z == 1)
+        {
+            assert(*out_it == input.get(out_it.getPos() + Pos3(1,1,0)));
+        }
+        else 
+            assert(*out_it == 0);
+    }
+    
     // =======================================================================================
     
     Mat3Df out_ders(output.getDims());
@@ -120,6 +134,26 @@ void test_signalLayer()
     Mat3Df in_ders(input.getDims());
     
     layer.backward(input, output, out_ders, &in_ders);
+    
+    for (Mat3Df::iterator it = in_ders.begin(); it != in_ders.end(); ++it)
+    {
+        if (it.z == 0)
+        {
+            if (it.x < in_ders.w - 1 && it.y < in_ders.h - 1)
+                assert(*it == 1);
+            else 
+                assert(*it == 0);
+        }
+        else if (it.z == 1)
+        {
+            if (it.x==0 || it.y==0)
+                assert(*it == 0);
+            else 
+                assert(*it == 1);
+        }
+        else 
+            assert(*it == 0);
+    }
     
     
     in_ders.debugOut("input derivatives");
