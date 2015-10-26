@@ -20,6 +20,7 @@
 #include "layer/PoolingFunction.h"
 #include "layer/PoolingLayer.h"
 
+#include "Network.h"
 
 Mat3Df get_test_mat()
 {

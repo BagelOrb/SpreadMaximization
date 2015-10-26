@@ -5,17 +5,15 @@
 
 class GradientDescentParams : public UpdateFunctionParams
 {
-public:
-    float delta = 0.01;
-    
 };
 
-class GradientDescentFunction : public UpdateFunctionState
+class GradientDescentFunction : public UpdateFunction
 {
+    float delta = 0.01;
 public:
-    void update(float& param, UpdateFunctionParams* params)
+    void update(float& param, float der, UpdateFunctionParams* local_update_params)
     {
-        param += der * static_cast<GradientDescentParams*>(params)->delta;
+        param += der * delta; // static_cast<GradientDescentParams*>(local_update_params)->
     }
 };
 

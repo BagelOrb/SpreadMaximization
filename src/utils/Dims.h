@@ -37,7 +37,7 @@ public:
 class Dims3 
 {
 public:
-    const unsigned int w, h, d;
+    unsigned int w, h, d;
     Dims3(unsigned int w, unsigned int h, unsigned int d) 
     : w(w), h(h), d(d)
     {
