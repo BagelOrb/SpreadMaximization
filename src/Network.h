@@ -7,6 +7,7 @@
 #include "layer/SubLayer.h"
 #include "utils/Mat3Df.h"
 #include "utils/Mat3D.h"
+#include "Settings.h"
 
 class LayerState
 {
@@ -68,6 +69,8 @@ class Network
 {
     std::vector<SubLayer*> layers;
     
+    NetworkSettings network_settings;
+    
     NetworkState network_state;
     
     void initializeParams(std::function<float(float)> func)
@@ -111,6 +114,13 @@ class Network
     }
     
 
+    void test()
+    {
+        network_settings.pool_type = PoolType::SoftSquareMax;
+        network_settings.transfer_function_type = TransferFunctionType::Tanh;
+        
+        
+    }
 
 };
 

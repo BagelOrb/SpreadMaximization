@@ -22,9 +22,11 @@ public:
     TransferFunctionType transfer_function_type;
 };
 
-class LayerSettings : public NetworkSettings
+class LayerSettings 
 {
 public:
+    NetworkSettings network_settings;
+    
     // pool settings
     Dims2 pool_field_size; 
     Dims2 pool_skip;
@@ -37,7 +39,7 @@ public:
     unsigned int n_neurons;
     
     LayerSettings(NetworkSettings network_settings, unsigned int n_neurons, unsigned int w_c, unsigned int w_p, TransferFunction* transfer_function)
-    : NetworkSettings(network_settings)
+    : network_settings(network_settings)
     , pool_field_size(w_p, w_p)
     , pool_skip(w_p, w_p)
     , transfer_function(transfer_function)
