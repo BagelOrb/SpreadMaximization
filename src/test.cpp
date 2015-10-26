@@ -5,19 +5,19 @@
 
 #include "utils/Mat3Df.h"
 #include "utils/Convolution.h"
-#include "Pooling.h"
+#include "layer/Pooling.h"
 #include "utils/Pos.h"
 #include "utils/Dims.h"
 
-#include "SignalLayer.h"
+#include "layer/SignalLayer.h"
 
 #include "learning/GradientDescentFunction.h"
 
-#include "TransferLayer.h"
-#include "TransferFunction.h"
+#include "layer/TransferLayer.h"
+#include "layer/TransferFunction.h"
 
-#include "PoolingFunction.h"
-#include "PoolingLayer.h"
+#include "layer/PoolingFunction.h"
+#include "layer/PoolingLayer.h"
 
 Mat3Df get_test_mat()
 {
