@@ -2,6 +2,7 @@
 //test convolution
 #include <stdio.h>
 #include <iostream> // std::cerr
+#include <iomanip> // std cerr precision
 
 #include "utils/Mat3Df.h"
 #include "utils/Convolution.h"
@@ -18,6 +19,7 @@
 
 #include "layer/PoolingFunction.h"
 #include "layer/PoolingLayer.h"
+
 
 Mat3Df get_test_mat()
 {
@@ -47,7 +49,7 @@ Mat3Df get_test_mat_rand()
     for (int y = 0; y < h; y++)
     for (int x = 0; x < w; x++)
     {
-        m.set(x,y,z, (rand() % 100) / 50.0 - 1.0 );
+        m.set(x,y,z, (rand() % 100) / 5.0 - 10.0 );
         i++;
     }
     return m;
@@ -167,13 +169,15 @@ void test_transferLayer()
 
 void test_poolingLayer()
 {
-//     Mat3Df input = get_test_mat_rand();
-    Mat3Df input = get_test_mat();
+    Mat3Df input = get_test_mat_rand();
+//     Mat3Df input = get_test_mat();
     input.debugOut("input");
     
     
-    PoolingLayer<SoftAbsMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
+//     PoolingLayer<SoftAbsMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
 //     PoolingLayer<SoftSquareMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
+//     PoolingLayer<SoftSquareMaxPoolingFunction2> layer(Dims2(2,2), Dims2(2,2));
+    PoolingLayer<SoftAbsMaxPoolingFunction2> layer(Dims2(2,2), Dims2(2,2));
     
     Mat3Df output(layer.getOutputDims(input.getDims()));
     
@@ -203,6 +207,9 @@ void test_poolingLayer()
 
 int main ( int argc, char** argv )
 {
+    std::cerr << std::fixed;
+    std::cerr << std::setprecision(2);
+    
 //     test_signalLayer();
 //     test_transferLayer();
     test_poolingLayer();

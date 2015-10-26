@@ -86,6 +86,8 @@ public:
                 if (in_it.y == 0) 
                     std::cerr << std::endl;
             }
+            if (*in_it >= 0)
+                std::cerr << " ";
             std::cerr << *in_it << "\t";
         }
         std::cerr << "\n";
