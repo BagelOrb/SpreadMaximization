@@ -8,6 +8,8 @@
 #include "../utils/Dims.h"
 #include "../utils/Pos.h"
 
+#include "../utils/DifferentiableFunction.h"
+
 class PoolingFunction
 {
 public:
@@ -60,20 +62,21 @@ public:
      * \param in_ders (output param) input derivatives
      */
     float add_ders(Mat3Df& in, Pos lu_start_pos, Dims2 field_size, float out, float out_der, Mat3Df& in_ders);
-        
+
 };
 
-
-class SoftAbsMaxPoolingFunction : public PoolingFunction
+class SoftArgMaxPoolingFunction : public PoolingFunction
 {
 private:
     Mat3Df* weights;
     float total_weight;
+    DifferentiableFunction& inner_function;
 public:
     float hardness;
     
-    SoftAbsMaxPoolingFunction()
-    : hardness(1.0)
+    SoftArgMaxPoolingFunction(DifferentiableFunction& inner_function)
+    : inner_function(inner_function)
+    , hardness(1.0)
     { }
         
     
@@ -93,5 +96,26 @@ public:
     float add_ders(Mat3Df& ins, Pos lu_start_pos, Dims2 field_size, float out, float out_der, Mat3Df& in_ders);        
 };
 
+class SoftAbsMaxPoolingFunction : public SoftArgMaxPoolingFunction
+{
+    Abs _inner_function;
+public:
+    SoftAbsMaxPoolingFunction()
+    : SoftArgMaxPoolingFunction(_inner_function)
+    {
+        hardness = 1.0;
+    }
+};
+
+class SoftSquareMaxPoolingFunction : public SoftArgMaxPoolingFunction
+{
+    Square _inner_function;
+public:
+    SoftSquareMaxPoolingFunction()
+    : SoftArgMaxPoolingFunction(_inner_function)
+    {
+        hardness = 1.0;
+    }
+};
 
 #endif // POOLING_FUNCTION_H

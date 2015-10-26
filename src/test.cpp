@@ -36,6 +36,23 @@ Mat3Df get_test_mat()
     return m;
 }
 
+Mat3Df get_test_mat_rand()
+{
+    int w = 5;
+    int h = 5;
+    int d = 3;
+    Mat3Df m(Dims(w,h,d));
+    float i = 0;
+    for (int z = 0; z < d; z++)
+    for (int y = 0; y < h; y++)
+    for (int x = 0; x < w; x++)
+    {
+        m.set(x,y,z, (rand() % 100) / 50.0 - 1.0 );
+        i++;
+    }
+    return m;
+}
+
 void test_convolution()
 {
     Mat3Df m = get_test_mat();
@@ -150,10 +167,13 @@ void test_transferLayer()
 
 void test_poolingLayer()
 {
+//     Mat3Df input = get_test_mat_rand();
     Mat3Df input = get_test_mat();
     input.debugOut("input");
     
+    
     PoolingLayer<SoftAbsMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
+//     PoolingLayer<SoftSquareMaxPoolingFunction> layer(Dims2(2,2), Dims2(2,2));
     
     Mat3Df output(layer.getOutputDims(input.getDims()));
     
@@ -165,6 +185,11 @@ void test_poolingLayer()
     
     Mat3Df out_ders(output.getDims());
     out_ders.clear(1.0f);
+    for (Mat3Df::iterator it = out_ders.begin(); it != out_ders.end(); ++it)
+    { // set every second feature maps derivatives to minus one
+        if (it.getPos().z % 2 == 1)
+            *it = -1.0;
+    }
     
     Mat3Df in_ders(input.getDims());
     
