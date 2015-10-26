@@ -27,7 +27,7 @@ void SignalLayer::backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat
     assert(!in_derivatives || in.getDims() == in_derivatives->getDims());
     if (in_derivatives) 
     {
-        in_derivatives->apply([](float) { return 0; }); // reset derivatives at input mat to zero
+        in_derivatives->clear(); // reset derivatives at input mat to zero
     }
     
     weights_ders->clear();
@@ -36,10 +36,7 @@ void SignalLayer::backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat
     for (Mat3Df::iterator out_it = out_derivatives.begin(); out_it != out_derivatives.end(); ++out_it)
     {
         float neuron_out_der = *out_it;
-        for (Mat4Df::iterator bias_it = biases_ders->begin(); bias_it != biases_ders->end(); ++bias_it)
-        {
-            *bias_it += neuron_out_der;
-        }
+        biases_ders->add(0,0,0,out_it.z, neuron_out_der);
         for (Mat4Df::iterator weight_it = Mat4Df::iterator(0,0,0,out_it.z, *weights); weight_it != Mat4Df::iterator(0,0,0,out_it.z + 1, *weights); ++weight_it)
         {
             Pos3 in_pos(out_it.x + weight_it.x, out_it.y + weight_it.y, weight_it.z);

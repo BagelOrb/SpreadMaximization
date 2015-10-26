@@ -75,7 +75,8 @@ public:
     float hardness;
     
     SoftArgMaxPoolingFunction(DifferentiableFunction& inner_function)
-    : inner_function(inner_function)
+    : weights(nullptr)
+    , inner_function(inner_function)
     , hardness(1.0)
     { }
         

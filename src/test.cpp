@@ -93,18 +93,11 @@ void test_convolution()
 void test_signalLayer()
 {
     SignalLayer layer(Dims3(2, 2, 2), 2);
-    {
-        layer.neurons[0].state.bias = 0.0;
-        Mat3Df& k = layer.neurons[0].state.weights;
-        k.apply([](float) { return 0; } );
-        k.set(0,0,0, 1.0);
-    }
-    {
-        layer.neurons[1].state.bias = 0.0;
-        Mat3Df& k = layer.neurons[1].state.weights;
-        k.apply([](float) { return 0; } );
-        k.set(1,1,1, 1.0);
-    }
+    
+    layer.biases->clear();
+    layer.weights->clear();
+    layer.weights->set(0,0,0,0, 1.0);
+    layer.weights->set(1,1,1,1, 1.0);
     
     Mat3Df input = get_test_mat();
     input.debugOut("input");
@@ -131,10 +124,7 @@ void test_signalLayer()
     
     in_ders.debugOut("input derivatives");
     
-    for (Neuron& neuron : layer.neurons)
-    {
-        neuron.state.weights.debugOut("neuron weights");
-    }
+    layer.weights->debugOut("neuron weights");
 }
 
 void test_transferLayer()
@@ -209,8 +199,10 @@ int main ( int argc, char** argv )
     std::cerr << std::fixed;
     std::cerr << std::setprecision(2);
     
-//     test_signalLayer();
+    test_signalLayer();
+//     std::cerr << "\n\n\n==========================================================================\n\n\n";
 //     test_transferLayer();
-    test_poolingLayer();
+//     std::cerr << "\n\n\n==========================================================================\n\n\n";
+//     test_poolingLayer();
     return 0;
 }
