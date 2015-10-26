@@ -21,7 +21,7 @@ class Layer
     
     TransferFunction* transfer_function;
     
-    
+public:
     Layer(LayerSettings settings, unsigned int n_input_channels)
     {
         switch (settings.pool_type)
@@ -57,6 +57,12 @@ class Layer
         signal_layer = new SignalLayer(Dims3(settings.conv_field_size.w, settings.conv_field_size.h, n_input_channels), settings.n_neurons);
     }
     
+    void addToNetwork(std::vector<SubLayer*>& layers)
+    {
+        layers.push_back(signal_layer);
+        layers.push_back(transfer_layer);
+        layers.push_back(pooling_layer);
+    }
 };
 
 #endif // LAYER_LAYER_H

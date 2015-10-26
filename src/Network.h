@@ -66,23 +66,23 @@ public:
 
 class Network 
 {
-    std::vector<SubLayer> layers;
+    std::vector<SubLayer*> layers;
     
     NetworkState network_state;
     
     void initializeParams(std::function<float(float)> func)
     {
-        for (SubLayer& layer : layers)
+        for (SubLayer* layer : layers)
         {
-            layer.initializeParams(func);
+            layer->initializeParams(func);
         }
     }
     
     Dims3 getOutputDims(Dims3 input_dims)
     {
-        for (SubLayer& layer : layers)
+        for (SubLayer* layer : layers)
         {
-            input_dims = layer.getOutputDims(input_dims); // output of prev layer is input to next
+            input_dims = layer->getOutputDims(input_dims); // output of prev layer is input to next
         }
         return input_dims;
     }
@@ -91,7 +91,7 @@ class Network
     {
         for (unsigned int layer_idx = 0; layer_idx < layers.size(); layer_idx++)
         {
-            SubLayer& layer = layers[layer_idx];
+            SubLayer& layer = *layers[layer_idx];
             LayerState& state = network_state.layer_states[layer_idx];
             layer.forward(state.input, state.output);
         }
@@ -103,7 +103,7 @@ class Network
         
         for (unsigned int layer_idx = layers.size() - 1; int(layer_idx) >= 0; layer_idx++)
         {
-            SubLayer& layer = layers[layer_idx];
+            SubLayer& layer = *layers[layer_idx];
             LayerState& state = network_state.layer_states[layer_idx];
             layer.backward(state.input, state.output, state.output_ders, state.input_ders);
         }
