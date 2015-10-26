@@ -70,6 +70,7 @@ float SoftArgMaxPoolingFunction::apply(Mat3Df& in, Pos lu_start_pos, Dims2 field
         float contribution = weight * in_val;
         total += contribution;
     }
+    assert (!isinf(total)); // weights of layer below are too large or hardness is too high
     return total / total_weight;
 }
 
