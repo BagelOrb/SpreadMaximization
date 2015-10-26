@@ -9,32 +9,9 @@
 #include "TransferFunction.h"
 
 #include "../utils/Dims.h"
+#include "../Settings.h"
 
-enum class PoolType
-{
-    Max, AbsMax, SoftAbsMax, SoftSquareMax
-};
 
-enum class TransferFunctionType
-{
-    Sigmoid, Tanh
-};
-
-class LayerSettings
-{
-public:
-    // pool settings
-    PoolType pool_type;
-    Dims2 field_size; 
-    Dims2 skip;
-    
-    // transfer settings
-    TransferFunctionType transfer_function_type;
-    
-    // convolution settings
-    Dims2 conv_field; 
-    unsigned int n_neurons;
-};
 
 class Layer 
 {
@@ -50,17 +27,17 @@ class Layer
         switch (settings.pool_type)
         {
             case PoolType::Max:
-                pooling_layer = new PoolingLayer<MaxPoolingFunction>(settings.field_size, settings.skip);
+                pooling_layer = new PoolingLayer<MaxPoolingFunction>(settings.pool_field_size, settings.pool_skip);
                 break;
             case PoolType::AbsMax:
-                pooling_layer = new PoolingLayer<AbsMaxPoolingFunction>(settings.field_size, settings.skip);
+                pooling_layer = new PoolingLayer<AbsMaxPoolingFunction>(settings.pool_field_size, settings.pool_skip);
                 break;
             case PoolType::SoftAbsMax:
-                pooling_layer = new PoolingLayer<SoftAbsMaxPoolingFunction2>(settings.field_size, settings.skip);
+                pooling_layer = new PoolingLayer<SoftAbsMaxPoolingFunction2>(settings.pool_field_size, settings.pool_skip);
                 break;
             case PoolType::SoftSquareMax:
             default:
-                pooling_layer = new PoolingLayer<SoftSquareMaxPoolingFunction2>(settings.field_size, settings.skip);
+                pooling_layer = new PoolingLayer<SoftSquareMaxPoolingFunction2>(settings.pool_field_size, settings.pool_skip);
                 break;
         }
         
@@ -77,7 +54,7 @@ class Layer
         transfer_layer = new TransferLayer(*transfer_function);
         
         
-        signal_layer = new SignalLayer(Dims3(settings.conv_field.w, settings.conv_field.h, n_input_channels), settings.n_neurons);
+        signal_layer = new SignalLayer(Dims3(settings.conv_field_size.w, settings.conv_field_size.h, n_input_channels), settings.n_neurons);
     }
     
 };
