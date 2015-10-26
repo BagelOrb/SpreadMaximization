@@ -3,6 +3,37 @@
 
 #include "Pos.h"
     
+class Dims4 
+{
+public:
+    const unsigned int w, h, d, m;
+    Dims4(unsigned int w, unsigned int h, unsigned int d, unsigned int m) 
+    : w(w), h(h), d(d), m(m)
+    {
+    }
+    bool operator==(const Dims4& p) const { return w==p.w&&h==p.h&&d==p.d&&m==p.m; }
+    bool operator!=(const Dims4& p) const { return !(*this==p); }
+    struct iterator : public Pos4
+    {
+        Dims4& dims;
+        
+        iterator(unsigned int x, unsigned int y, unsigned int z, unsigned int m, Dims4& dims) 
+        : Pos4(x, y, z, m)
+        , dims(dims) 
+        { }
+        
+        iterator& operator++();
+        
+        iterator operator++(int) { iterator ret = *this; ++(*this); return ret; }
+        Pos4& operator*() { return *this; }
+        Pos4* operator->() { return &*(*this); }
+        bool operator==(iterator other) { return &dims == &other.dims && x == other.x && y == other.y && z == other.z && n == other.n; }
+        bool operator!=(iterator other) { return !(*this == other); }
+    };
+    iterator end() { return iterator(0,0,0,m, *this); }
+    iterator begin() { return iterator(0,0,0,0, *this); }
+};    
+
 class Dims3 
 {
 public:

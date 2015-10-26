@@ -144,21 +144,6 @@ public:
         data[w*h* z + w* y + x] = val;
     }
     void set(Pos3 p, F& val) { return set(p.x, p.y, p.z, val); };
-private:
-    
-    void _convolute(Mat3D<F>& kernel, Mat3D<F>& result, unsigned int z)
-    {
-        assert(kernel.w <= w && kernel.h <= h && kernel.d <= d);
-        for (iterator res_it = result.begin(); res_it != iterator(0,0,1,result); ++res_it)
-        {
-            *res_it = 0;
-            for (iterator k_it = kernel.begin(); k_it != kernel.end(); ++k_it)
-            {
-                Pos3 dataPos = res_it + k_it;
-                result.add(res_it, get(dataPos) * *k_it);
-            }
-        }
-    }
 public:
     
     template <class Function>
