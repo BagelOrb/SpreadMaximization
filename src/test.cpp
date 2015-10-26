@@ -21,6 +21,7 @@
 #include "layer/PoolingLayer.h"
 
 #include "Network.h"
+#include "layer/Layer.h"
 
 Mat3Df get_test_mat()
 {
