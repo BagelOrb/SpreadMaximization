@@ -8,6 +8,7 @@
 
 #include "SubLayer.h"
 #include "../utils/Mat3Df.h"
+#include "../utils/Mat4D.h"
 #include "../utils/Convolution.h"
 #include "../utils/Pos.h"
 #include "../utils/Dims.h"
