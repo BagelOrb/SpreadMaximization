@@ -92,8 +92,7 @@ void test_convolution()
 
 void test_signalLayer()
 {
-    SignalLayer<GradientDescentFunction> layer(Dims3(2, 2, 2), 2);
-    layer.update_function_params = new GradientDescentParams();
+    SignalLayer layer(Dims3(2, 2, 2), 2);
     {
         layer.neurons[0].state.bias = 0.0;
         Mat3Df& k = layer.neurons[0].state.weights;

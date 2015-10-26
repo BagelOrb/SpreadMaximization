@@ -15,6 +15,7 @@ set(SRCS
     src/utils/Dims.cpp
     src/layer/PoolingLayerImpl.h
     src/layer/PoolingFunction.cpp
+    src/layer/SignalLayer.cpp
 )
 
 

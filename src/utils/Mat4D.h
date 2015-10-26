@@ -11,11 +11,12 @@
 #include "Dims.h"
 
 template <typename F>
-class Mat4D : public Dims4
+class Mat4D 
 {
 private:
 public:
     F* data;
+    unsigned int w, h, d, m;
     unsigned int size;
     
 public:
@@ -71,7 +72,7 @@ public:
     }
 protected:
     Mat4D<F>(unsigned int w, unsigned int h, unsigned int d, unsigned int m)
-    : Dims4(w, h, d, m), size(w*h*d)
+    : w(w), h(h), d(d), m(m), size(w*h*d*m)
     {
         data = new F[w*h*d*m];
     }
@@ -102,7 +103,7 @@ public:
      * Copy constructor
      */
     Mat4D<F>(const Mat4D<F>& b) 
-    : Dims4(b.w, b.h, b.d, b.m)
+    : w(b.w), h(b.h), d(b.d), m(b.m)
     , size(b.size)
     {
         std::cerr << "Warning! expensive Mat4Df copy!\n";
@@ -117,7 +118,7 @@ public:
      * Move 'constructor'
      */
     Mat4D<F>(Mat4D<F>&& from)
-    : Dims4(w, h, d, m)
+    : w(w), h(h), d(d), m(m)
     , size(from.size)
     , data(from.data)
     {
@@ -125,7 +126,7 @@ public:
     }
     Dims4 getDims()
     {
-        return *this;
+        return Dims4(w, h, d, m);
     }
     
     void clear(F& val)

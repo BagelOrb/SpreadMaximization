@@ -99,6 +99,9 @@ public:
 
 Pos3 operator *(Pos3 a, Dims2 b);
 
+Pos3 operator +(Pos3 a, Pos4 b);
+Pos4 operator +(Pos4 a, Pos3 b);
+
 Dims3 operator +(Dims3 a, Dims2 b);
 
 

@@ -19,46 +19,26 @@
 
 #include "Neuron.h"
 
-template<class UpdateFunctionState>
 class SignalLayer : public SubLayer 
 {
 public:
     
+    Mat4Df* weights;
+    Mat4Df* weights_ders;
+    Mat4Df* biases; // 1*1*1*m mat
+    Mat4Df* biases_ders; // 1*1*1*m mat
+    
     std::vector<Neuron> neurons;
-    
-    UpdateFunctionParams* update_function_params; //!< The global parameters to the update function, e.g. weight decay term
-    
-    struct NeuronUpdateState
-    {
-        Mat3D<UpdateFunctionState> weight_params;
-        UpdateFunctionState bias_params;
-        
-        NeuronUpdateState(Dims3 conv_field)
-        : weight_params(conv_field)
-        { }
-        
-        void resetDers()
-        {
-            bias_params.resetDer();
-            for (auto weight_param_it = weight_params.begin(); weight_param_it != weight_params.end(); ++weight_param_it)
-            {
-                weight_param_it->resetDer();
-            }
-        }
-    };
-    
-    std::vector<NeuronUpdateState> update_function_state; //!< The current state of local parameters for the update function for a single layer parameter
-    
+
     SignalLayer(Dims3 conv_field, unsigned int n_neurons)
-    : update_function_params(nullptr)
     {
-        neurons.reserve(n_neurons);
-        update_function_state.reserve(n_neurons);
-        while (neurons.size() < n_neurons)
-        {
-            neurons.emplace_back(conv_field);
-            update_function_state.emplace_back(conv_field);
-        }
+        layer_params.reserve(2); // weights and derivatives
+        layer_params.emplace_back(Dims4(conv_field.w, conv_field.h, conv_field.d, n_neurons));
+        layer_params.emplace_back(Dims4(n_neurons, 1, 1, 1));
+        weights = &layer_params[0].params;
+        weights_ders = &layer_params[0].params;
+        biases = &layer_params[1].params;
+        biases_ders = &layer_params[1].params;
     }
     
     Dims3 getOutputDims(Dims3 input_dims);
@@ -71,6 +51,5 @@ public:
 
 };
 
-#include "SignalLayerImpl.h"
 
 #endif // SIGNAL_LAYER_H
