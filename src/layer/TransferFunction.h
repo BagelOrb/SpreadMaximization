@@ -12,6 +12,20 @@ public:
 
 };
 
+class LinearFunction : public TransferFunction
+{
+public:
+    float apply(float in)
+    {
+        return in;
+    }
+    
+    float der(float in, float out)
+    {
+        return 1.0;
+    }
+};
+
 class SigmoidTransferFunction : public TransferFunction
 {
 public:
