@@ -237,8 +237,8 @@ void test_network()
     input.applyInPlace([](float in) { return in/10; });
     input.debugOut("input");
     
-    TanhTransferFunction transfer_function;
-//     LinearTransferFunction transfer_function;
+//     TanhTransferFunction transfer_function;
+    LinearTransferFunction transfer_function;
     
     Network network;
     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Tanh, 3, 2, 2, &transfer_function), input.d);
@@ -253,15 +253,17 @@ void test_network()
             return 1.0; // only set the very first param to 1
         });
     
-    network.layers.front()->layer_params.front().params.debugOut("first layer params");
+//     network.layers.front()->layer_params.front().params.debugOut("first layer params");
     
     network.network_state.initialize(network.layers, input);
     
     network.forward();
     
-    LayerState& state = network.network_state.layer_states.back();
-    state.output.debugOut("network output");
-    
+    for (LayerState& state : network.network_state.layer_states)
+    {
+        state.output.debugOut("network output");
+    }
+    /*
     for (Pos3 p : state.output.getDims())
     {
         if (p == Pos3(0,0,0)) assert(std::abs(state.output.get(p) - 0.54) < 0.01);
@@ -269,7 +271,7 @@ void test_network()
         else if (p == Pos3(0,1,0)) assert(std::abs(state.output.get(p) - 0.92) < 0.01);
         else if (p == Pos3(1,1,0)) assert(std::abs(state.output.get(p) - 0.95) < 0.01);
         else assert(state.output.get(p) == 0);
-    }
+    }*/
     
     GradientDescentUpdater updater(0.1);
     
@@ -277,9 +279,18 @@ void test_network()
     
     objective.ObjectiveFunction::setOutputDerivatives(network);
     
-    network.backward();
+    Mat3Df input_ders(input.getDims());
+    network.backward(&input_ders);
     
-//     network.layers.front()->layer_params.front().ders.debugOut("first layer derivatives");
+    
+    input_ders.debugOut("input derivatives");
+    for (LayerState& state : network.network_state.layer_states)
+    {
+        state.output_ders.debugOut("derivatives");
+    }
+    
+    
+    network.layers.front()->layer_params.front().ders.debugOut("first layer derivatives");
     
 }
 
