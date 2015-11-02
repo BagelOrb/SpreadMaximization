@@ -27,6 +27,7 @@
 #include "learning/ObjectiveFunction.h"
 
 #include "NetworkProcessor.h"
+#include "learning/ParamInitializer.h"
 
 Mat3Df get_test_mat()
 {
@@ -370,6 +371,29 @@ void test_network_processor()
     
 }
 
+void test_network_init()
+{
+    Mat3Df input = get_test_mat();
+    
+    
+    Network network;
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    
+    bool set = false;
+//     network.initializeParams(ParamInitializer::uniformRandomTanh());
+    network.initializeParams(ParamInitializer::nonuniformRandomTanh());
+    
+    for (SubLayer* layer : network.layers)
+    {
+        std::cerr << "||||||||||||||||||||||||||||||||||||||||||||||\n";
+        for (LayerParams& params : layer->layer_params)
+            params.params.debugOut("params");
+    }
+    
+
+    
+}
+
 int main ( int argc, char** argv )
 {
     std::cerr << std::fixed;
@@ -381,6 +405,8 @@ int main ( int argc, char** argv )
 //     std::cerr << "\n\n\n==========================================================================\n\n\n";
 //     test_poolingLayer();
     
-    test_network_processor();
+//     test_network();
+//     test_network_processor();
+    test_network_init();
     return 0;
 }
