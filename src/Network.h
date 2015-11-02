@@ -13,10 +13,10 @@ class LayerState
 {
 public:
     SubLayer& layer;
-    Mat3Df& input;
+    Mat3Df& input; // the input is the output of the previous layer
     Mat3Df output;
     Mat3Df output_ders;
-    Mat3Df* input_ders;
+    Mat3Df* input_ders; // may be nullptr when input derivatives aren't needed (on the very first layer)
     LayerState(SubLayer& layer, Mat3Df& input)
     : layer(layer)
     , input(input)
@@ -32,95 +32,47 @@ class NetworkState
 public:
     std::vector<LayerState> layer_states;
     
-    void initialize(std::vector<SubLayer>& layers, Mat3Df& input)
-    {
-        if (!layer_states.empty())
-        {
-            if (layer_states.front().input.getDims() == input.getDims())
-            {
-                return;
-            }
-            else 
-            {
-                layer_states.clear();
-            }
-        }
-        
-        layer_states.reserve(layers.size());
-        Mat3Df* _input = &input;
-        LayerState* last_layer_state = nullptr;
-        
-        for (unsigned int layer_idx = 0; layer_idx < layers.size(); layer_idx++)
-        {
-            layer_states.emplace_back(layers[layer_idx], *_input);
-            LayerState& layer_state = layer_states.back();
-            if (last_layer_state)
-            {
-                layer_state.input_ders = &last_layer_state->output_ders;
-            }
-            _input = &layer_state.output;
-            last_layer_state = &layer_state;
-        }
-        
-    }
+    /*!
+     * Initialize all mats and link them over layers.
+     * Used for reinitialization when the next image is of a different size.
+     */
+    void initialize(std::vector<SubLayer>& layers, Mat3Df& input);
 };
 
 class Network 
 {
+public:
     std::vector<SubLayer*> layers;
-    
-    NetworkSettings network_settings;
     
     NetworkState network_state;
     
-    void initializeParams(std::function<float(float)> func)
+    ~Network();
+    
+    
+    unsigned int getOutputDepth(unsigned int input_depth)
     {
         for (SubLayer* layer : layers)
         {
-            layer->initializeParams(func);
+            input_depth = layer->getOutputDepth(input_depth);
         }
+        return input_depth;
     }
     
-    Dims3 getOutputDims(Dims3 input_dims)
-    {
-        for (SubLayer* layer : layers)
-        {
-            input_dims = layer->getOutputDims(input_dims); // output of prev layer is input to next
-        }
-        return input_dims;
-    }
+    /*!
+     * \param n_input_features The number of input features for the new layer (only needed for the very first layer added)
+     */
+    void addLayer(LayerSettings settings, unsigned int n_input_features = 0);
     
-    void forward()
-    {
-        for (unsigned int layer_idx = 0; layer_idx < layers.size(); layer_idx++)
-        {
-            SubLayer& layer = *layers[layer_idx];
-            LayerState& state = network_state.layer_states[layer_idx];
-            layer.forward(state.input, state.output);
-        }
-    }
+    void initializeParams(std::function<float(float)> func);
     
-    void backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat3Df* in_derivatives = nullptr)
-    {
-        network_state.layer_states[0].input_ders = in_derivatives;
-        
-        for (unsigned int layer_idx = layers.size() - 1; int(layer_idx) >= 0; layer_idx++)
-        {
-            SubLayer& layer = *layers[layer_idx];
-            LayerState& state = network_state.layer_states[layer_idx];
-            layer.backward(state.input, state.output, state.output_ders, state.input_ders);
-        }
-        
-    }
+    Dims3 getOutputDims(Dims3 input_dims);
     
-
-    void test()
-    {
-        network_settings.pool_type = PoolType::SoftSquareMax;
-        network_settings.transfer_function_type = TransferFunctionType::Tanh;
-        
-        
-    }
+    void forward();
+    
+    /*!
+     * Take the local derivatives at the output layer and propagates them back through the network.
+     */
+    void backward(Mat3Df* in_derivatives = nullptr);
 
 };
 
