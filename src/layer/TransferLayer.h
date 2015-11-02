@@ -58,6 +58,11 @@ public:
         assert(out_derivatives.getDims() == out.getDims());
         assert(!in_derivatives || out_derivatives.getDims() == in_derivatives->getDims());
         
+        if (!in_derivatives)
+        {
+            return;
+        }
+        
         for (Mat3Df::iterator in_it = in.begin(); in_it != in.end(); ++in_it)
         {
             in_derivatives->set(in_it.getPos(), out_derivatives.get(in_it.getPos()) * transfer_function->der(*in_it, out.get(in_it.getPos()) * out_derivatives.get(in_it.getPos())));

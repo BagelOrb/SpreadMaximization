@@ -329,7 +329,7 @@ void test_network_processor()
     
     
     Network network;
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
     network.initializeParams(
@@ -348,15 +348,15 @@ void test_network_processor()
     
     
     LayerState& state = network.network_state.layer_states.back();
-    state.output.debugOut("");
-    for (Pos3 p : state.output.getDims())
-    {
-        if (p == Pos3(0,0,0)) assert(state.output.get(p) == 6);
-        else if (p == Pos3(1,0,0)) assert(state.output.get(p) == 8);
-        else if (p == Pos3(0,1,0)) assert(state.output.get(p) == 16);
-        else if (p == Pos3(1,1,0)) assert(state.output.get(p) == 18);
-        else assert(state.output.get(p) == 0);
-    }
+    state.output.debugOut("output");
+//     for (Pos3 p : state.output.getDims())
+//     {
+//         if (p == Pos3(0,0,0)) assert(state.output.get(p) == 6);
+//         else if (p == Pos3(1,0,0)) assert(state.output.get(p) == 8);
+//         else if (p == Pos3(0,1,0)) assert(state.output.get(p) == 16);
+//         else if (p == Pos3(1,1,0)) assert(state.output.get(p) == 18);
+//         else assert(state.output.get(p) == 0);
+//     }
 
     for (LayerState& state : network.network_state.layer_states)
     {
@@ -406,7 +406,7 @@ int main ( int argc, char** argv )
 //     test_poolingLayer();
     
 //     test_network();
-//     test_network_processor();
-    test_network_init();
+    test_network_processor();
+//     test_network_init();
     return 0;
 }

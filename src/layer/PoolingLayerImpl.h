@@ -22,6 +22,10 @@ void PoolingLayer<PoolingFunction>::forward(Mat3Df& in, Mat3Df& out)
         pool_it->reset();
     }
     
+    if (is_total_pooling_layer)
+    {
+        field_size = Dims2(in.getDims().w, in.getDims().h);
+    }
     
     for (Mat3Df::iterator out_it = out.begin(); out_it != out.end(); ++out_it)
     {
