@@ -45,6 +45,30 @@ public:
     
 };
 
+enum class ObjectiveFunctionType
+{
+    Test
+};
 
+enum class UpdaterType 
+{
+    GradientDescent 
+};
+
+class ProcessorSettings 
+{ 
+public:
+    ObjectiveFunctionType objective_function_type;
+    UpdaterType updater_type;
+    
+    double gradient_descent_delta;
+    
+    ProcessorSettings(double gradient_descent_delta)
+    : objective_function_type(ObjectiveFunctionType::Test)
+    , updater_type(UpdaterType::GradientDescent)
+    , gradient_descent_delta(gradient_descent_delta)
+    {
+    }
+};
 
 #endif // SETTINGS_H

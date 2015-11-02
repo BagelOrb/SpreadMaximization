@@ -11,6 +11,7 @@ void NetworkState::initialize(std::vector<SubLayer*>& layers, Mat3Df& input)
     {
         if (layer_states.front().input.getDims() == input.getDims())
         { // the last time the network has signalled was on the same size image, so all Mat3D's are already of the correct size
+            layer_states.front().input = input;
             return;
         }
         else 

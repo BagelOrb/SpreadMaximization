@@ -16,7 +16,7 @@ public:
 
 };
 
-class BSobjectiveFunction : public ObjectiveFunction
+class TestObjectiveFunction : public ObjectiveFunction
 {
 protected:
     void setOutputDerivatives(Mat3Df& out, Mat3Df& out_ders)

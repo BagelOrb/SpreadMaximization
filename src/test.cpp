@@ -26,6 +26,8 @@
 #include "learning/Updater.h"
 #include "learning/ObjectiveFunction.h"
 
+#include "NetworkProcessor.h"
+
 Mat3Df get_test_mat()
 {
     int w = 5;
@@ -234,7 +236,7 @@ void test_poolingLayer()
 void test_network()
 {
     Mat3Df input = get_test_mat();
-    input.applyInPlace([](float in) { return in/10; });
+//     input.applyInPlace([](float in) { return in/10; });
     input.debugOut("input");
     
 //     TanhTransferFunction transfer_function;
@@ -255,6 +257,16 @@ void test_network()
     
 //     network.layers.front()->layer_params.front().params.debugOut("first layer params");
     
+    
+    GradientDescentUpdater updater(0.0001);
+    
+    TestObjectiveFunction objective;
+    
+    updater.initializeMetaParams(network);
+    
+    
+    
+    
     network.network_state.initialize(network.layers, input);
     
     network.forward();
@@ -262,6 +274,16 @@ void test_network()
     for (LayerState& state : network.network_state.layer_states)
     {
         state.output.debugOut("network output");
+    }
+    
+    LayerState& state = network.network_state.layer_states.back();
+    for (Pos3 p : state.output.getDims())
+    {
+        if (p == Pos3(0,0,0)) assert(state.output.get(p) == 6);
+        else if (p == Pos3(1,0,0)) assert(state.output.get(p) == 8);
+        else if (p == Pos3(0,1,0)) assert(state.output.get(p) == 16);
+        else if (p == Pos3(1,1,0)) assert(state.output.get(p) == 18);
+        else assert(state.output.get(p) == 0);
     }
     /*
     for (Pos3 p : state.output.getDims())
@@ -272,10 +294,6 @@ void test_network()
         else if (p == Pos3(1,1,0)) assert(std::abs(state.output.get(p) - 0.95) < 0.01);
         else assert(state.output.get(p) == 0);
     }*/
-    
-    GradientDescentUpdater updater(0.1);
-    
-    BSobjectiveFunction objective;
     
     objective.ObjectiveFunction::setOutputDerivatives(network);
     
@@ -288,9 +306,71 @@ void test_network()
     {
         state.output_ders.debugOut("derivatives");
     }
+    for (Pos3 p : input_ders.getDims())
+    {
+        if (p == Pos3(1,1,0)) assert(input_ders.get(p) == 1.0);
+        else assert(input_ders.get(p) == 0.0);
+    }
+    
+    network.layers.front()->layer_params.front().ders.debugOut("first layer weight derivatives");
+    network.layers.front()->layer_params.back().ders.debugOut("first layer bias derivatives");
+    
+    updater.update(network);
     
     
-    network.layers.front()->layer_params.front().ders.debugOut("first layer derivatives");
+    network.forward();
+    
+    for (LayerState& state : network.network_state.layer_states)
+    {
+        state.output.debugOut("network output");
+    }
+}
+
+void test_network_processor()
+{
+    Mat3Df input = get_test_mat();
+    
+    LinearTransferFunction transfer_function;
+    
+    Network network;
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Tanh, 3, 2, 2, &transfer_function), input.d);
+    
+    bool set = false;
+    network.initializeParams(
+        [&set](float) 
+        { 
+            if (set)
+                return 0.0; 
+            set = true;
+            return 1.0; // only set the very first param to 1
+        });
+    
+    
+    NetworkProcessor processor(ProcessorSettings(0.0001));
+    
+    processor.process(network, input);
+    
+    
+    LayerState& state = network.network_state.layer_states.back();
+    for (Pos3 p : state.output.getDims())
+    {
+        if (p == Pos3(0,0,0)) assert(state.output.get(p) == 6);
+        else if (p == Pos3(1,0,0)) assert(state.output.get(p) == 8);
+        else if (p == Pos3(0,1,0)) assert(state.output.get(p) == 16);
+        else if (p == Pos3(1,1,0)) assert(state.output.get(p) == 18);
+        else assert(state.output.get(p) == 0);
+    }
+
+    for (LayerState& state : network.network_state.layer_states)
+    {
+        state.output.debugOut("network output");
+    }
+
+    for (LayerState& state : network.network_state.layer_states)
+    {
+        state.output_ders.debugOut("derivatives");
+    }
+    
     
 }
 
@@ -305,6 +385,6 @@ int main ( int argc, char** argv )
 //     std::cerr << "\n\n\n==========================================================================\n\n\n";
 //     test_poolingLayer();
     
-    test_network();
+    test_network_processor();
     return 0;
 }
