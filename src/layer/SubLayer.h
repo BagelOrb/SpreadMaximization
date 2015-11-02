@@ -21,6 +21,12 @@ public:
     , ders(dims)
     {
     }
+//     ~LayerParams()
+//     {
+//         delete &dims;
+//         delete &params;
+//         delete &ders;
+//     }
 };
 
 class SubLayer 

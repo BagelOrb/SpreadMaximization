@@ -10,6 +10,7 @@
  */
 class Updater
 {
+public:
     /*!
      * Meta parameters such as the current velocity for momentum
      */
@@ -22,6 +23,7 @@ class GradientDescentUpdater : public Updater
 {
     double delta;
     
+public:
     GradientDescentUpdater(double delta)
     : delta(delta)
     {

@@ -51,12 +51,12 @@ public:
     
     
     void clear(float val = 0.0) { Mat4D<float>::clear(val); }
-    
-    void set(Pos4 p, float val) { Mat4D<float>::set(p, val); };
+protected:
     void set(unsigned int x, unsigned int y, unsigned int z, unsigned int n, float val) { Mat4D<float>::set(x,y,z,n, val); }
-    
-    void add(Pos4 p, float val) { data[w*h*d* p.n + w*h* p.z + w* p.y + p.x] += val; };
     void add(unsigned int x, unsigned int y, unsigned int z, unsigned int n, float val) { data[w*h*d* n + w*h* z + w* y + x] += val; };
+public:
+    void set(Pos4 p, float val) { Mat4D<float>::set(p, val); };
+    void add(Pos4 p, float val) { data[w*h*d* p.n + w*h* p.z + w* p.y + p.x] += val; };
     
     template <class Function>
     void apply(Function f, Mat4Df& result)

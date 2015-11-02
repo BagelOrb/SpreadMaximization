@@ -23,6 +23,9 @@
 #include "Network.h"
 #include "layer/Layer.h"
 
+#include "learning/Updater.h"
+#include "learning/ObjectiveFunction.h"
+
 Mat3Df get_test_mat()
 {
     int w = 5;
@@ -34,7 +37,7 @@ Mat3Df get_test_mat()
     for (int y = 0; y < h; y++)
     for (int x = 0; x < w; x++)
     {
-        m.set(x,y,z, i);
+        m.set(Pos3(x,y,z), i);
         i++;
     }
     return m;
@@ -51,7 +54,7 @@ Mat3Df get_test_mat_rand()
     for (int y = 0; y < h; y++)
     for (int x = 0; x < w; x++)
     {
-        m.set(x,y,z, (rand() % 100) / 5.0 - 10.0 );
+        m.set(Pos3(x,y,z), (rand() % 100) / 5.0 - 10.0 );
         i++;
     }
     return m;
@@ -67,9 +70,9 @@ void test_convolution()
     for (int y = 0; y < k.h; y++)
     for (int x = 0; x < k.w; x++)
     {
-        k.set(x,y,z, 0);
+        k.set(Pos3(x,y,z), 0);
         if (x == 0 && y == 0 && z == 0)
-            k.set(x,y,z, 1);
+            k.set(Pos3(x,y,z), 1);
     }
 
     auto func = [](float in) 
@@ -98,8 +101,8 @@ void test_signalLayer()
     
     layer.biases->clear();
     layer.weights->clear();
-    layer.weights->set(0,0,0,0, 1.0);
-    layer.weights->set(1,1,1,1, 1.0);
+    layer.weights->set(Pos4(0,0,0,0), 1.0);
+    layer.weights->set(Pos4(1,1,1,1), 1.0);
     
     Mat3Df input = get_test_mat();
     input.debugOut("input");
@@ -258,6 +261,26 @@ void test_network()
     
     LayerState& state = network.network_state.layer_states.back();
     state.output.debugOut("network output");
+    
+    for (Pos3 p : state.output.getDims())
+    {
+        if (p == Pos3(0,0,0)) assert(std::abs(state.output.get(p) - 0.54) < 0.01);
+        else if (p == Pos3(1,0,0)) assert(std::abs(state.output.get(p) - 0.66) < 0.01);
+        else if (p == Pos3(0,1,0)) assert(std::abs(state.output.get(p) - 0.92) < 0.01);
+        else if (p == Pos3(1,1,0)) assert(std::abs(state.output.get(p) - 0.95) < 0.01);
+        else assert(state.output.get(p) == 0);
+    }
+    
+    GradientDescentUpdater updater(0.1);
+    
+    BSobjectiveFunction objective;
+    
+    objective.ObjectiveFunction::setOutputDerivatives(network);
+    
+    network.backward();
+    
+//     network.layers.front()->layer_params.front().ders.debugOut("first layer derivatives");
+    
 }
 
 int main ( int argc, char** argv )

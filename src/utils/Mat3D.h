@@ -133,16 +133,18 @@ public:
         for (int i = 0; i < w*h*d; i++)
             data[i] = val;
     }
+protected:
     F& get(unsigned int x, unsigned int y, unsigned int z)
     {
         assert(x<w && y<h && z<d);
         return data[w*h* z + w* y + x];
     }
-    F& get(Pos3 p) { return get(p.x, p.y, p.z); }
     void set(unsigned int x, unsigned int y, unsigned int z, F& val)
     {
         data[w*h* z + w* y + x] = val;
     }
+public:
+    F& get(Pos3 p) { return get(p.x, p.y, p.z); }
     void set(Pos3 p, F& val) { return set(p.x, p.y, p.z, val); };
 public:
     

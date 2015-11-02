@@ -40,7 +40,7 @@ void SignalLayer::backward(Mat3Df& in, Mat3Df& out, Mat3Df& out_derivatives, Mat
     for (Mat3Df::iterator out_it = out_derivatives.begin(); out_it != out_derivatives.end(); ++out_it)
     {
         float neuron_out_der = *out_it;
-        biases_ders->add(0,0,0,out_it.z, neuron_out_der);
+        biases_ders->add(Pos4(out_it.z,0,0,0), neuron_out_der);
         for (Mat4Df::iterator weight_it = Mat4Df::iterator(0,0,0,out_it.z, *weights); weight_it != Mat4Df::iterator(0,0,0,out_it.z + 1, *weights); ++weight_it)
         {
             Pos3 in_pos(out_it.x + weight_it.x, out_it.y + weight_it.y, weight_it.z);

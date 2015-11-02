@@ -102,7 +102,7 @@ void Network::backward(Mat3Df* in_derivatives)
 {
     network_state.layer_states[0].input_ders = in_derivatives;
     
-    for (unsigned int layer_idx = layers.size() - 1; int(layer_idx) >= 0; layer_idx++)
+    for (unsigned int layer_idx = layers.size() - 1; int(layer_idx) >= 0; layer_idx--)
     {
         SubLayer& layer = *layers[layer_idx];
         LayerState& state = network_state.layer_states[layer_idx];
