@@ -173,8 +173,7 @@ void test_transferLayer()
     Mat3Df input = get_test_mat();
     input.debugOut("input");
     
-    SigmoidTransferFunction transfer_function;
-    TransferLayer layer(transfer_function);
+    TransferLayer layer(TransferFunctionType::Sigmoid);
     
     Mat3Df output(layer.getOutputDims(input.getDims()));
     
@@ -239,11 +238,8 @@ void test_network()
 //     input.applyInPlace([](float in) { return in/10; });
     input.debugOut("input");
     
-//     TanhTransferFunction transfer_function;
-    LinearTransferFunction transfer_function;
-    
     Network network;
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Tanh, 3, 2, 2, &transfer_function), input.d);
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
     network.initializeParams(
@@ -330,10 +326,9 @@ void test_network_processor()
 {
     Mat3Df input = get_test_mat();
     
-    LinearTransferFunction transfer_function;
     
     Network network;
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Tanh, 3, 2, 2, &transfer_function), input.d);
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
     network.initializeParams(
@@ -352,6 +347,7 @@ void test_network_processor()
     
     
     LayerState& state = network.network_state.layer_states.back();
+    state.output.debugOut("");
     for (Pos3 p : state.output.getDims())
     {
         if (p == Pos3(0,0,0)) assert(state.output.get(p) == 6);

@@ -53,7 +53,7 @@ void Network::addLayer(LayerSettings settings, unsigned int n_input_features)
         n_input_features = getOutputDepth(n_input_features);
     }
     layers.push_back(new SignalLayer(Dims3(settings.conv_field_size.w, settings.conv_field_size.h, n_input_features), settings.n_neurons));
-    layers.push_back(new TransferLayer(*settings.transfer_function));
+    layers.push_back(new TransferLayer(settings.transfer_function_type));
     switch (settings.pool_type)
     {
     case PoolType::Max:

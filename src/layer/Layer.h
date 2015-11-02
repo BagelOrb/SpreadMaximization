@@ -41,17 +41,7 @@ public:
                 break;
         }
         
-        
-        switch (settings.transfer_function_type)
-        {
-            case TransferFunctionType::Sigmoid:
-                transfer_function = new SigmoidTransferFunction();
-                break;
-            case TransferFunctionType::Tanh:
-            default:
-                transfer_function = new TanhTransferFunction();
-        }
-        transfer_layer = new TransferLayer(*transfer_function);
+        transfer_layer = new TransferLayer(settings.transfer_function_type);
         
         
         signal_layer = new SignalLayer(Dims3(settings.conv_field_size.w, settings.conv_field_size.h, n_input_channels), settings.n_neurons);

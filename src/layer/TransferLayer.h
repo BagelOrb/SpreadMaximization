@@ -6,14 +6,31 @@
 
 #include "SubLayer.h"
 #include "TransferFunction.h"
+#include "../Settings.h"
 
 class TransferLayer : public SubLayer
 {
     TransferFunction* transfer_function;
 public: 
-    TransferLayer(TransferFunction& transfer_function)
-    : transfer_function(&transfer_function)
+    TransferLayer(TransferFunctionType transfer_function_type)
     {
+        switch (transfer_function_type)
+        {
+            case TransferFunctionType::Sigmoid:
+                transfer_function = new SigmoidTransferFunction();
+                break;
+            case TransferFunctionType::Tanh:
+                transfer_function = new TanhTransferFunction();
+                break;
+            case TransferFunctionType::Linear:
+                transfer_function = new LinearTransferFunction();
+                break;
+        }
+    }
+    
+    ~TransferLayer()
+    {
+        delete transfer_function;
     }
     
     void initializeParams(std::function<float(float)>) { } // there are no params

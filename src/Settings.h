@@ -11,7 +11,7 @@ enum class PoolType
 
 enum class TransferFunctionType
 {
-    Sigmoid, Tanh
+    Sigmoid, Tanh, Linear
 };
 
 
@@ -25,19 +25,15 @@ public:
     Dims2 pool_field_size; 
     Dims2 pool_skip;
     
-    // transfer settings
-    TransferFunction* transfer_function;
-    
     // convolution settings
     Dims2 conv_field_size; 
     unsigned int n_neurons;
     
-    LayerSettings(PoolType pool_type, TransferFunctionType transfer_function_type, unsigned int n_neurons, unsigned int w_c, unsigned int w_p, TransferFunction* transfer_function)
+    LayerSettings(PoolType pool_type, TransferFunctionType transfer_function_type, unsigned int n_neurons, unsigned int w_c, unsigned int w_p)
     : pool_type(pool_type)
     , transfer_function_type(transfer_function_type)
     , pool_field_size(w_p, w_p)
     , pool_skip(w_p, w_p)
-    , transfer_function(transfer_function)
     , conv_field_size(w_c, w_c)
     , n_neurons(n_neurons)
     {
