@@ -230,8 +230,34 @@ void test_poolingLayer()
 
 void test_network()
 {
-    Network network;
+    Mat3Df input = get_test_mat();
+    input.applyInPlace([](float in) { return in/10; });
+    input.debugOut("input");
     
+    TanhTransferFunction transfer_function;
+//     LinearTransferFunction transfer_function;
+    
+    Network network;
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Tanh, 3, 2, 2, &transfer_function), input.d);
+    
+    bool set = false;
+    network.initializeParams(
+        [&set](float) 
+        { 
+            if (set)
+                return 0.0; 
+            set = true;
+            return 1.0; // only set the very first param to 1
+        });
+    
+    network.layers.front()->layer_params.front().params.debugOut("first layer params");
+    
+    network.network_state.initialize(network.layers, input);
+    
+    network.forward();
+    
+    LayerState& state = network.network_state.layer_states.back();
+    state.output.debugOut("network output");
 }
 
 int main ( int argc, char** argv )

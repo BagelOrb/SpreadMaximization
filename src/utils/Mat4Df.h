@@ -75,6 +75,15 @@ public:
         return result;
     }
     
+    template <class Function>
+    void applyInPlace(Function f)
+    {
+        for (unsigned int rp = 0; rp < size; rp++)
+        {
+            data[rp] = f(data[rp]);
+        }
+    }
+    
     void debugOut(std::string name = "")
     {
         std::cerr << name << ": " << std::endl;

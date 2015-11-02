@@ -12,7 +12,7 @@ public:
 
 };
 
-class LinearFunction : public TransferFunction
+class LinearTransferFunction : public TransferFunction
 {
 public:
     float apply(float in)

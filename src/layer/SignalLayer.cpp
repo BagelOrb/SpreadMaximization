@@ -14,8 +14,8 @@ Dims3 SignalLayer::getOutputDims(Dims3 input_dims)
 
 void SignalLayer::initializeParams(std::function<float(float)> func)
 {
-    weights->apply(func);
-    biases->apply(func);
+    weights->applyInPlace(func);
+    biases->applyInPlace(func);
 }
 
 

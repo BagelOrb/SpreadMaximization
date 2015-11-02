@@ -36,7 +36,7 @@ public:
      * Initialize all mats and link them over layers.
      * Used for reinitialization when the next image is of a different size.
      */
-    void initialize(std::vector<SubLayer>& layers, Mat3Df& input);
+    void initialize(std::vector<SubLayer*>& layers, Mat3Df& input);
 };
 
 class Network 

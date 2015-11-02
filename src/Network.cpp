@@ -5,7 +5,7 @@
 #include "layer/PoolingFunction.h"
 #include "utils/Dims.h"
 
-void NetworkState::initialize(std::vector< SubLayer >& layers, Mat3Df& input)
+void NetworkState::initialize(std::vector<SubLayer*>& layers, Mat3Df& input)
 {
     if (!layer_states.empty())
     {
@@ -25,7 +25,7 @@ void NetworkState::initialize(std::vector< SubLayer >& layers, Mat3Df& input)
     
     for (unsigned int layer_idx = 0; layer_idx < layers.size(); layer_idx++)
     {
-        layer_states.emplace_back(layers[layer_idx], *_input);
+        layer_states.emplace_back(*layers[layer_idx], *_input);
         LayerState& layer_state = layer_states.back();
         if (last_layer_state)
         {

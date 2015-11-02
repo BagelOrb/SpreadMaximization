@@ -75,6 +75,12 @@ public:
         return result;
     }
     
+    template <class Function>
+    void applyInPlace(Function f)
+    {
+        apply(f, *this);
+    }
+    
     void debugOut(std::string name = "")
     {
         std::cerr << name << ": " << std::endl;
