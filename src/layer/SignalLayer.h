@@ -37,6 +37,8 @@ public:
         biases_ders = &layer_params[1].ders;
     }
     
+    unsigned int getOutputDepth(unsigned int input_depth);
+    
     Dims3 getOutputDims(Dims3 input_dims);
     
     void initializeParams(std::function<float(float)> func);

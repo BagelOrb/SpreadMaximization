@@ -228,17 +228,23 @@ void test_poolingLayer()
     in_ders.debugOut("input derivatives");
 }
 
-
+void test_network()
+{
+    Network network;
+    
+}
 
 int main ( int argc, char** argv )
 {
     std::cerr << std::fixed;
     std::cerr << std::setprecision(2);
     
-    test_signalLayer();
+//     test_signalLayer();
 //     std::cerr << "\n\n\n==========================================================================\n\n\n";
 //     test_transferLayer();
 //     std::cerr << "\n\n\n==========================================================================\n\n\n";
 //     test_poolingLayer();
+    
+    test_network();
     return 0;
 }

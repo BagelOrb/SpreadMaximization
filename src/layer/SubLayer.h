@@ -30,6 +30,7 @@ public:
     
     virtual void initializeParams(std::function<float(float)> func) = 0;
     virtual Dims3 getOutputDims(Dims3 input_dims) = 0;
+    virtual unsigned int getOutputDepth(unsigned int input_depth) = 0;
     virtual void forward(Mat3Df& in, Mat3Df& out) = 0;
     /*!
      * When no @p in_derivatives is given, the derivatives are only back propagated to the weights and not the inputs

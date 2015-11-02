@@ -18,6 +18,11 @@ public:
     
     void initializeParams(std::function<float(float)>) { } // there are no params
     
+    unsigned int getOutputDepth(unsigned int input_depth)
+    {
+        return input_depth;
+    }
+    
     Dims3 getOutputDims(Dims3 input_dims)
     {
         return input_dims;

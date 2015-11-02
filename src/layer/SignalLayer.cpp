@@ -1,5 +1,9 @@
 #include "SignalLayer.h"
 
+unsigned int SignalLayer::getOutputDepth(unsigned int input_depth)
+{
+    return weights->m;
+}
 
 Dims3 SignalLayer::getOutputDims(Dims3 input_dims)
 {

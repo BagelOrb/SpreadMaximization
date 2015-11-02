@@ -12,6 +12,7 @@ set(SRCS
 #     src/main.cpp
 #     src/DisplayImage.cpp
     src/test.cpp
+    src/Network.cpp
     src/utils/Dims.cpp
     src/layer/PoolingLayerImpl.h
     src/layer/PoolingFunction.cpp

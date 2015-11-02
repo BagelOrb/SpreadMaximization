@@ -34,6 +34,11 @@ public:
         // no params
     }
     
+    unsigned int getOutputDepth(unsigned int input_depth)
+    {
+        return input_depth;
+    }
+    
     Dims3 getOutputDims(Dims3 input_dims)
     {
         return Dims3((input_dims.w - field_size.w) / skip.w + 1, (input_dims.h - field_size.h) / skip.h + 1, input_dims.d);
