@@ -67,7 +67,7 @@ public:
 class Dims2
 {
 public:
-    const unsigned int w, h;
+    unsigned int w, h;
     Dims2(unsigned int w, unsigned int h)
     : w(w), h(h)
     {

@@ -15,7 +15,7 @@ class PoolingLayer : public SubLayer
     bool is_total_pooling_layer;
 public:
     
-    PoolingLayer(Dims2 field_size, Dims2 skip, is_total_pooling_layer = false)
+    PoolingLayer(Dims2 field_size, Dims2 skip, bool is_total_pooling_layer = false)
     : skip(skip)
     , field_size(field_size)
     , pool_states(nullptr)
