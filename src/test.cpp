@@ -46,6 +46,20 @@ Mat3Df get_test_mat()
     return m;
 }
 
+Mat3Df get_test_mat(int w, int h, int d)
+{
+    Mat3Df m(Dims3(w,h,d));
+    float i = 0;
+    for (int z = 0; z < d; z++)
+    for (int y = 0; y < h; y++)
+    for (int x = 0; x < w; x++)
+    {
+        m.set(Pos3(x,y,z), i);
+        i++;
+    }
+    return m;
+}
+
 Mat3Df get_test_mat_rand()
 {
     int w = 5;
@@ -323,45 +337,43 @@ void test_network()
     }
 }
 
-void test_input_derivatives(Network& network, Mat3Df& input)
+void test_input_derivatives(Network& network, Mat3Df& input, float tolerance, float delta = 0.0001)
 {
     NetworkProcessor processor(ProcessorSettings(0.0)); // don't really update
-    
+
     Mat3Df input_derivatives(input.getDims());
-    
+
     Mat3Df variable_input = input;
-    
+
     Mat3Df actual_input_derivatives(input.getDims());
-    
+
     processor.process(network, variable_input, &input_derivatives);
-    
+
     input_derivatives.debugOut("input_derivatives");
-    
+
     NetworkState state = network.network_state; 
-    
+
     float output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
-    
-    float delta = 0.0001;
-    
+
     for (Pos3 pos : input.getDims())
     {
         Mat3Df updated_input(input);
         updated_input.add(pos, delta);
-        
+
         network.network_state.initialize(network.layers, updated_input);
         network.forward();
-        
+
         float updated_output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
-        
+
         float actual_der = ((updated_output - output) / delta);
         actual_input_derivatives.set(pos, actual_der);
-        
+
         float computed_der = input_derivatives.get(pos);
-        
-        assert(fabs(actual_der - computed_der) < 0.1);
-        
-        std::cerr << output << "\t" <<updated_output << "\t" << (updated_output - output) << " \t ";
-        std::cerr << "computed der = " << computed_der << "\tactual der = " << actual_der << std::endl;
+
+        assert(fabs(actual_der - computed_der) < tolerance);
+
+//         std::cerr << output << "\t" <<updated_output << "\t" << (updated_output - output) << " \t ";
+//         std::cerr << "computed der = " << computed_der << "\tactual der = " << actual_der << std::endl;
     }
     
     actual_input_derivatives.debugOut("actual input derivatives");
@@ -371,14 +383,14 @@ void test_input_derivatives(Network& network, Mat3Df& input)
 
 void test_network_derivatives()
 {
-    Mat3Df input = get_test_mat();
+    Mat3Df input = get_test_mat(7,7,1);
     
     input.debugOut("input");
     
     Network network;
 //     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 3, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 2, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 2, 2, 2), input.d);
 //     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
 //     network.layers.push_back(new PoolingLayer<SoftAbsMaxPoolingFunction>(Dims2(2,2), Dims2(2,2)));
@@ -393,9 +405,33 @@ void test_network_derivatives()
             return 1.0; // only set the very first param to 1
         });
     
+    set = false;
+    network.layers[3]->initializeParams(
+        [&set](float) 
+        { 
+            if (set)
+                return 0.0; 
+            set = true;
+            return 1.0; // only set the very first param to 1
+        });
     
+    test_input_derivatives(network, input, 0.01);
     
-    test_input_derivatives(network, input);
+}
+
+void test_random_network_derivatives()
+{
+    Mat3Df input = get_test_mat(7,7,1);
+    
+    input.debugOut("input");
+    
+    Network network;
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 2, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 2, 2, 2), input.d);
+    
+    network.initializeParams(ParamInitializer::uniformRandomTanh());
+    
+    test_input_derivatives(network, input, 0.1, 10.0);
     
 }
 
@@ -494,7 +530,8 @@ int main ( int argc, char** argv )
     
 //     test_network();
 //     test_network_processor();
-    test_network_derivatives();
+//     test_network_derivatives();
+    test_random_network_derivatives();
 //     test_network_init();
     return 0;
 }

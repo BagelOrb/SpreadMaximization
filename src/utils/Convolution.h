@@ -125,7 +125,7 @@ private:
             *res_it = 0;
             for (Mat4Df::iterator k_it = Mat4Df::iterator(0,0,0,res_it.z, kernels); k_it != Mat4Df::iterator(0,0,0,res_it.z+1, kernels); ++k_it)
             {
-                Pos3 dataPos(res_it.x + k_it.x, res_it.y + k_it.y, res_it.z);
+                Pos3 dataPos(res_it.x + k_it.x, res_it.y + k_it.y, k_it.z);
                 result.add(res_it, input.get(dataPos) * *k_it);
             }
         }
