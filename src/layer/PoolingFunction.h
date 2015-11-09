@@ -125,7 +125,7 @@ class SoftSquareMaxPoolingFunction2 : public SoftArgMaxPoolingFunction
     {
     public:
         float apply(float in) { return in * in - 10; }
-        float der(float in) { return .5* in; }
+        float der(float in) { return 2.0 * in; }
     };
     Square2 _inner_function;
 public:

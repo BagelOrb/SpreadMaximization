@@ -64,7 +64,7 @@ float SoftArgMaxPoolingFunction::apply(Mat3Df& in, Pos3 lu_start_pos, Dims2 fiel
     {
         Pos3 in_pos = lu_start_pos + pool_pos;
         float in_val = in.get(in_pos);
-        float weight = exp(inner_function.apply(hardness * in_val));
+        float weight = exp(hardness * inner_function.apply(in_val));
         total_weight += weight;
         weights.set(pool_pos, weight);
         float contribution = weight * in_val;

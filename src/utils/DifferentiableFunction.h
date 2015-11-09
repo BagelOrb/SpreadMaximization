@@ -26,7 +26,7 @@ class Square : public DifferentiableFunction
 {
 public:
     float apply(float in) { return in * in; }
-    float der(float in) { return .5 * in; }
+    float der(float in) { return 2.0 * in; }
 };
 
 

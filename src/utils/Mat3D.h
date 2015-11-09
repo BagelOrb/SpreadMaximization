@@ -113,6 +113,7 @@ public:
     
     /*!
      * Move 'constructor'
+     * Delete the old mat without deleting the data, and make the new mat refer to the existing data.
      */
     Mat3D<F>(Mat3D<F>&& from)
     : w(from.w)
@@ -121,7 +122,8 @@ public:
     , size(from.size)
     , data(from.data)
     {
-        from.dont_delete_data;
+//         std::cerr << "Mat3Df move constructor\n";
+        from.dont_delete_data = true; // causes the mat to be moved to be deleted without deleting the data
     }
     Dims3 getDims()
     {

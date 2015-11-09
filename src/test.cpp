@@ -323,45 +323,81 @@ void test_network()
     }
 }
 
-void test_input_derivatives(Network& network)
+void test_input_derivatives(Network& network, Mat3Df& input)
 {
-    NetworkState state = network.network_state; 
-    
-    Mat3Df input = state.layer_states.front().input;
-    
     NetworkProcessor processor(ProcessorSettings(0.0)); // don't really update
     
     Mat3Df input_derivatives(input.getDims());
     
-    processor.process(network, input, &input_derivatives);
+    Mat3Df variable_input = input;
+    
+    processor.process(network, variable_input, &input_derivatives);
+    
+    input_derivatives.debugOut("input_derivatives");
+    
+    NetworkState state = network.network_state; 
     
     float output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
     
-    float delta = 0.0001;
+    float delta = 0.001;
     
     for (Pos3 pos : input.getDims())
     {
-        Mat3Df updated_input = input;
+        Mat3Df updated_input(input);
         updated_input.add(pos, delta);
         
-        processor.process(network, updated_input);
+        network.network_state.initialize(network.layers, updated_input);
+        network.forward();
         
         float updated_output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
         
+        std::cerr << output << "\t" <<updated_output << "\t" << (updated_output - output) << " \t ";
         std::cerr << "computed der = " << input_derivatives.get(pos) << "\tactual der = " << ((updated_output - output) / delta) << std::endl;
-        network.network_state = state;
     }
     
 }
+
+
+void test_network_derivatives()
+{
+    Mat3Df input = get_test_mat();
+    
+    input.debugOut("input");
+    
+    Network network;
+//     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    
+//     network.layers.push_back(new PoolingLayer<SoftAbsMaxPoolingFunction>(Dims2(2,2), Dims2(2,2)));
+    
+    bool set = false;
+    network.initializeParams(
+        [&set](float) 
+        { 
+            if (set)
+                return 0.0; 
+            set = true;
+            return 1.0; // only set the very first param to 1
+        });
+    
+    
+    
+    test_input_derivatives(network, input);
+    
+}
+
 
 void test_network_processor()
 {
     Mat3Df input = get_test_mat();
     
+    input.debugOut("input");
     
     Network network;
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
-//     network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
     network.initializeParams(
@@ -377,8 +413,6 @@ void test_network_processor()
     NetworkProcessor processor(ProcessorSettings(0.0001));
     
     processor.process(network, input);
-    
-    test_input_derivatives(network);
     
     LayerState& state = network.network_state.layer_states.back();
     
@@ -438,7 +472,7 @@ void test_network_init()
 int main ( int argc, char** argv )
 {
     std::cerr << std::fixed;
-    std::cerr << std::setprecision(2);
+    std::cerr << std::setprecision(5);
     
 //     test_signalLayer();
 //     std::cerr << "\n\n\n==========================================================================\n\n\n";
@@ -447,7 +481,8 @@ int main ( int argc, char** argv )
 //     test_poolingLayer();
     
 //     test_network();
-    test_network_processor();
+//     test_network_processor();
+    test_network_derivatives();
 //     test_network_init();
     return 0;
 }
