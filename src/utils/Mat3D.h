@@ -85,7 +85,7 @@ public:
         h = b.h;
         d = b.d;
         size = b.size;
-        std::cerr << "Warning! expensive Mat3Df assignment!\n";
+//         std::cerr << "Warning! expensive Mat3Df assignment!\n";
         data = new float[w*h*d];
         for (unsigned int idx = 0; idx < size; idx++)
         {
@@ -103,7 +103,7 @@ public:
     , d(b.d)
     , size(b.size)
     {
-        std::cerr << "Warning! expensive Mat3Df copy!\n";
+//         std::cerr << "Warning! expensive Mat3Df copy!\n";
         data = new F[w*h*d];
         for (unsigned int idx = 0; idx < size; idx++)
         {

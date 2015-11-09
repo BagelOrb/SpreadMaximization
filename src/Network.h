@@ -37,6 +37,23 @@ public:
      * Used for reinitialization when the next image is of a different size.
      */
     void initialize(std::vector<SubLayer*>& layers, Mat3Df& input);
+    
+    /*!
+     * Similar to initialize: copy all mats and link them over layers.
+     */
+    NetworkState& operator=(const NetworkState& other);
+    
+    /*!
+     * Copy constructor.
+     */
+    NetworkState(const NetworkState& rhs);
+    
+    /*!
+     * Empty constructor. (Doesn't construct anything)
+     */
+    NetworkState()
+    {
+    }
 };
 
 class Network 

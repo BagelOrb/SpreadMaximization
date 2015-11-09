@@ -38,6 +38,44 @@ void NetworkState::initialize(std::vector<SubLayer*>& layers, Mat3Df& input)
     
 }
 
+NetworkState& NetworkState::operator=(const NetworkState& rhs)
+{
+    // Check for self-assignment!
+    if (this == &rhs)      // Same object?
+    {
+        return *this;      // Yes, so skip assignment, and just return *this.
+    }
+      
+    Mat3Df& input = rhs.layer_states.front().input;
+
+    layer_states.clear();
+    layer_states.reserve(rhs.layer_states.size());
+
+    Mat3Df* _input = &input;
+    LayerState* last_layer_state = nullptr;
+    
+    for (unsigned int layer_idx = 0; layer_idx < rhs.layer_states.size(); layer_idx++)
+    {
+        layer_states.emplace_back(rhs.layer_states[layer_idx].layer, *_input);
+        LayerState& layer_state = layer_states.back();
+        layer_state.output = rhs.layer_states[layer_idx].output;
+        layer_state.output_ders = rhs.layer_states[layer_idx].output_ders;
+        if (last_layer_state)
+        {
+            layer_state.input_ders = &last_layer_state->output_ders;
+        }
+        _input = &layer_state.output;
+        last_layer_state = &layer_state;
+    }
+    return *this;
+}
+
+NetworkState::NetworkState(const NetworkState& rhs)
+{
+    *this = rhs;
+}
+
+
 Network::~Network()
 {
     for (SubLayer* layer : layers)

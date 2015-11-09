@@ -323,13 +323,45 @@ void test_network()
     }
 }
 
+void test_input_derivatives(Network& network)
+{
+    NetworkState state = network.network_state; 
+    
+    Mat3Df input = state.layer_states.front().input;
+    
+    NetworkProcessor processor(ProcessorSettings(0.0)); // don't really update
+    
+    Mat3Df input_derivatives(input.getDims());
+    
+    processor.process(network, input, &input_derivatives);
+    
+    float output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
+    
+    float delta = 0.0001;
+    
+    for (Pos3 pos : input.getDims())
+    {
+        Mat3Df updated_input = input;
+        updated_input.add(pos, delta);
+        
+        processor.process(network, updated_input);
+        
+        float updated_output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
+        
+        std::cerr << "computed der = " << input_derivatives.get(pos) << "\tactual der = " << ((updated_output - output) / delta) << std::endl;
+        network.network_state = state;
+    }
+    
+}
+
 void test_network_processor()
 {
     Mat3Df input = get_test_mat();
     
     
     Network network;
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
     network.initializeParams(
@@ -346,8 +378,12 @@ void test_network_processor()
     
     processor.process(network, input);
     
+    test_input_derivatives(network);
     
     LayerState& state = network.network_state.layer_states.back();
+    
+    
+    
     state.output.debugOut("output");
 //     for (Pos3 p : state.output.getDims())
 //     {
@@ -368,8 +404,13 @@ void test_network_processor()
         state.output_ders.debugOut("derivatives");
     }
     
+    for (unsigned int der : network.network_state.layer_states.front().output_ders)
+    {
+        assert(der < 1.0); // the output derivative is a total of one, so all dereivatives must be smaller than one
+    }
     
 }
+
 
 void test_network_init()
 {

@@ -34,12 +34,16 @@ public:
         delete updater;
     }
     
-    void process(Network& network, Mat3Df& input)
+    /*!
+     * Signal all layers, get the output derivatives from the objective function, 
+     * propagate them back through all layers and update all parameters.
+     */
+    void process(Network& network, Mat3Df& input, Mat3Df* input_derivatives = nullptr)
     {
         network.network_state.initialize(network.layers, input);
         network.forward();
         objective_function->ObjectiveFunction::setOutputDerivatives(network);
-        network.backward();
+        network.backward(input_derivatives);
         updater->update(network);
     }
     
