@@ -331,6 +331,8 @@ void test_input_derivatives(Network& network, Mat3Df& input)
     
     Mat3Df variable_input = input;
     
+    Mat3Df actual_input_derivatives(input.getDims());
+    
     processor.process(network, variable_input, &input_derivatives);
     
     input_derivatives.debugOut("input_derivatives");
@@ -339,7 +341,7 @@ void test_input_derivatives(Network& network, Mat3Df& input)
     
     float output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
     
-    float delta = 0.001;
+    float delta = 0.0001;
     
     for (Pos3 pos : input.getDims())
     {
@@ -351,10 +353,19 @@ void test_input_derivatives(Network& network, Mat3Df& input)
         
         float updated_output = network.network_state.layer_states.back().output.get(Pos3(0,0,0));
         
+        float actual_der = ((updated_output - output) / delta);
+        actual_input_derivatives.set(pos, actual_der);
+        
+        float computed_der = input_derivatives.get(pos);
+        
+        assert(fabs(actual_der - computed_der) < 0.1);
+        
         std::cerr << output << "\t" <<updated_output << "\t" << (updated_output - output) << " \t ";
-        std::cerr << "computed der = " << input_derivatives.get(pos) << "\tactual der = " << ((updated_output - output) / delta) << std::endl;
+        std::cerr << "computed der = " << computed_der << "\tactual der = " << actual_der << std::endl;
     }
     
+    actual_input_derivatives.debugOut("actual input derivatives");
+    (actual_input_derivatives - input_derivatives).debugOut("der diff");
 }
 
 
@@ -366,7 +377,8 @@ void test_network_derivatives()
     
     Network network;
 //     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 3, 2, 2), input.d);
 //     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
 //     network.layers.push_back(new PoolingLayer<SoftAbsMaxPoolingFunction>(Dims2(2,2), Dims2(2,2)));

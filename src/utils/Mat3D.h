@@ -125,7 +125,7 @@ public:
 //         std::cerr << "Mat3Df move constructor\n";
         from.dont_delete_data = true; // causes the mat to be moved to be deleted without deleting the data
     }
-    Dims3 getDims()
+    Dims3 getDims() const
     {
         return Dims3(w, h, d);
     }

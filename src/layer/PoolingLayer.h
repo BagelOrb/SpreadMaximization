@@ -48,6 +48,8 @@ public:
         }
         else 
         {
+            assert(int(input_dims.w - field_size.w) >= 0);
+            assert(int(input_dims.h - field_size.h) >= 0);
             return Dims3((input_dims.w - field_size.w) / skip.w + 1, (input_dims.h - field_size.h) / skip.h + 1, input_dims.d);
         }
     }

@@ -110,6 +110,8 @@ public:
 public:
     static Dims2 getOutputDims(Mat4Df& kernels, Dims3 input_dims)
     {
+        assert(int(input_dims.w - kernels.w) >= 0);
+        assert(int(input_dims.h - kernels.h) >= 0);
         return Dims2(input_dims.w - kernels.w + 1, input_dims.h - kernels.h + 1);
     }
     

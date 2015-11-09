@@ -33,6 +33,37 @@ public:
         return *this;
     }
     
+    Mat3Df& operator +=(const Mat3Df& b)
+    {
+        assert(b.getDims() == getDims());
+        for (unsigned int rp = 0; rp < size; rp++)
+        {
+            data[rp] += b.data[rp];
+        }
+        return *this;
+    }
+    Mat3Df operator+(Mat3Df& b)
+    {
+        Mat3Df ret = *this;
+        ret += b;
+        return ret;
+    }
+    Mat3Df& operator -=(const Mat3Df& b)
+    {
+        assert(b.getDims() == getDims());
+        for (unsigned int rp = 0; rp < size; rp++)
+        {
+            data[rp] -= b.data[rp];
+        }
+        return *this;
+    }
+    Mat3Df operator-(Mat3Df& b)
+    {
+        Mat3Df ret = *this;
+        ret -= b;
+        return ret;
+    }
+    
     /*!
      * Copy constructor
      */

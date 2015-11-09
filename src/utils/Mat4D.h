@@ -124,7 +124,7 @@ public:
     {
         from.dont_delete_data;
     }
-    Dims4 getDims()
+    Dims4 getDims() const
     {
         return Dims4(w, h, d, m);
     }
