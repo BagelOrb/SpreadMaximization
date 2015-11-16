@@ -14,6 +14,7 @@ float MaxPoolingFunction::apply(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_size)
             max_pos = in_pos;
         }
     }
+    return max;
 }
 
 float MaxPoolingFunction::add_ders(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_size, float out, float out_der, Mat3Df& in_ders)
@@ -24,7 +25,7 @@ float MaxPoolingFunction::add_ders(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_si
 
 float AbsMaxPoolingFunction::apply(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_size)
 {
-    float max = 0;
+    float max = -1;
     for (Pos3 pool_pos : field_size)
     {
         Pos3 in_pos = lu_start_pos + pool_pos;
@@ -34,11 +35,19 @@ float AbsMaxPoolingFunction::apply(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_si
             max_pos = in_pos;
         }
     }
+    return max;
 }
 
 float AbsMaxPoolingFunction::add_ders(Mat3Df& in, Pos3 lu_start_pos, Dims2 field_size, float out, float out_der, Mat3Df& in_ders)
 {
-    in_ders.add(max_pos, out_der);
+    if (in.get(max_pos) < 0)
+    {
+        in_ders.add(max_pos, - out_der);
+    }
+    else 
+    {
+        in_ders.add(max_pos, out_der);
+    }
 }
 
 Mat3Df& SoftArgMaxPoolingFunction::getWeights(Dims2 field_size)
