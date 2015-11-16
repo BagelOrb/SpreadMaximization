@@ -29,6 +29,8 @@
 #include "NetworkProcessor.h"
 #include "learning/ParamInitializer.h"
 
+#include "utils/Mnist.h"
+
 Mat3Df get_test_mat()
 {
     int w = 5;
@@ -343,7 +345,8 @@ void test_input_derivatives(Network& network, Mat3Df& input, float tolerance, fl
 
     Mat3Df input_derivatives(input.getDims());
 
-    Mat3Df variable_input = input;
+    Mat3Df variable_input(input.getDims());
+    variable_input = input;
 
     Mat3Df actual_input_derivatives(input.getDims());
 
@@ -359,7 +362,8 @@ void test_input_derivatives(Network& network, Mat3Df& input, float tolerance, fl
 
     for (Pos3 pos : input.getDims())
     {
-        Mat3Df updated_input(input);
+        Mat3Df updated_input(input.getDims());
+        updated_input = input;
         updated_input.add(pos, delta);
 
         network.network_state.initialize(network.layers, updated_input);
@@ -449,7 +453,7 @@ void test_network_processor()
     
     Network network;
 //     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Tanh, 3, 2, 2), input.d);
 //     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
     bool set = false;
@@ -535,8 +539,10 @@ int main ( int argc, char** argv )
     
 //     test_network();
 //     test_network_processor();
-    test_network_derivatives();
+//     test_network_derivatives();
 //     test_random_network_derivatives();
 //     test_network_init();
+    
+    Mnist::getMnist();
     return 0;
 }
