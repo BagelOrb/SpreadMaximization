@@ -543,6 +543,10 @@ int main ( int argc, char** argv )
 //     test_random_network_derivatives();
 //     test_network_init();
     
-    Mnist::getMnist();
+    
+    Dataset& dataset = Mnist::getDataset();
+//     std::cerr << std::setprecision(3);
+//     dataset.getImage(0).debugOut("first image");
+//     std::cerr << "label: " << int(dataset.getLabel(0)) << std::endl;
     return 0;
 }

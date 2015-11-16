@@ -5,31 +5,33 @@
 
 #include <iomanip> // std cerr precision TODO remove line
 
+#include "Dataset.h"
+
 #include "NoCopy.h"
 #include "Dims.h"
 #include "Mat3Df.h"
 #include "Mat4Df.h"
 
-class Mnist : NoCopy
+class Mnist : NoCopy, public Dataset
 {
     static constexpr int32_t magic_label = 2049;
     static constexpr int32_t magic_data = 2051;
 
-    static Mnist* mnist;
+    static Mnist* dataset;
     
 public:
-    static Mnist& getMnist() 
+    static Mnist& getDataset() 
     { 
-        if (!mnist)
+        if (!dataset)
         {
-            mnist = new Mnist();
+            dataset = new Mnist();
         }
-        return *mnist; 
+        return *dataset; 
     }
     
 private:
-    Mat4Df* data;
-    Mat4D<char>* labels;
+//     Mat4Df* data;
+//     Mat4D<char>* labels;
 
     static int32_t readInt32(std::fstream& fs)
     {
@@ -74,7 +76,7 @@ private:
         
         for (unsigned int pixel_idx = 0 ; pixel_idx < data->size ; pixel_idx++)
         {
-            data->data[pixel_idx] = readInt8(fs);
+            data->data[pixel_idx] = readInt8(fs) / 255.0;
         }
         fs.close();
         
@@ -98,30 +100,22 @@ private:
     }
     
     Mnist()
-    : data(nullptr)
+    : Dataset()
     {
         std::cerr << "reading MNIST data..." << std::endl;
         readData();
         std::cerr << "finished reading MNIST data.\n";
         readLabels();
-        std::cerr << std::setprecision(0);
-        (*data)[0].debugOut("first image");
-        std::cerr << "label: " << int(labels->get(Pos4(0,0,0,0))) << std::endl;
     }
 
 
-
-
-
-
+public:
 
 
 
 
 };
 
-
-Mnist* Mnist::mnist = nullptr;
-
+Mnist* Mnist::dataset = nullptr;
 
 #endif // UTILS_MNIST_H
