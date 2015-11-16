@@ -56,7 +56,7 @@ public:
         _pool(input, result);
         return result;
     }
-    Mat3Df pool(Mat3Df& input, Mat3Df& result)
+    Mat3Df& pool(Mat3Df& input, Mat3Df& result)
     {
         assert(result.getDims() == getOutputDims(input.getDims()));
         _pool(input, result);
