@@ -349,6 +349,8 @@ void test_input_derivatives(Network& network, Mat3Df& input, float tolerance, fl
 
     processor.process(network, variable_input, &input_derivatives);
 
+    network.network_state.layer_states.back().output.debugOut("output");
+    
     input_derivatives.debugOut("input_derivatives");
 
     NetworkState state = network.network_state; 
@@ -385,15 +387,18 @@ void test_network_derivatives()
 {
     Mat3Df input = get_test_mat(7,7,1);
     
+    input.applyInPlace([&input](float in) { return (in - input.size / 2) * .2; } );
+    
     input.debugOut("input");
     
     Network network;
 //     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 3, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 2, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 2, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Linear, 1, 2, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::Max, TransferFunctionType::Linear, 2, 2, 2), input.d);
 //     network.addLayer(LayerSettings(PoolType::SoftAbsMax, TransferFunctionType::Linear, 3, 2, 2), input.d);
     
 //     network.layers.push_back(new PoolingLayer<SoftAbsMaxPoolingFunction>(Dims2(2,2), Dims2(2,2)));
+    
     
     bool set = false;
     network.initializeParams(
@@ -405,17 +410,17 @@ void test_network_derivatives()
             return 1.0; // only set the very first param to 1
         });
     
-    set = false;
-    network.layers[3]->initializeParams(
-        [&set](float) 
-        { 
-            if (set)
-                return 0.0; 
-            set = true;
-            return 1.0; // only set the very first param to 1
-        });
+//     set = false;
+//     network.layers[3]->initializeParams(
+//         [&set](float) 
+//         { 
+//             if (set)
+//                 return 0.0; 
+//             set = true;
+//             return 1.0; // only set the very first param to 1
+//         });
     
-    test_input_derivatives(network, input, 0.01);
+    test_input_derivatives(network, input, 0.01, 0.001);
     
 }
 
@@ -426,8 +431,8 @@ void test_random_network_derivatives()
     input.debugOut("input");
     
     Network network;
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 2, 2, 2), input.d);
-    network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 2, 2, 2), input.d);
+    network.addLayer(LayerSettings(PoolType::AbsMax, TransferFunctionType::Linear, 1, 1, 2), input.d);
+//     network.addLayer(LayerSettings(PoolType::SoftSquareMax, TransferFunctionType::Sigmoid, 2, 2, 2), input.d);
     
     network.initializeParams(ParamInitializer::uniformRandomTanh());
     
@@ -530,8 +535,8 @@ int main ( int argc, char** argv )
     
 //     test_network();
 //     test_network_processor();
-//     test_network_derivatives();
-    test_random_network_derivatives();
+    test_network_derivatives();
+//     test_random_network_derivatives();
 //     test_network_init();
     return 0;
 }
