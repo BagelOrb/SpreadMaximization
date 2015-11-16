@@ -63,11 +63,11 @@ public:
         ret -= b;
         return ret;
     }
-    
+
     /*!
      * Copy constructor
      */
-    Mat3Df(const Mat3Df& b) 
+    Mat3Df(const Mat3Df& b)
     : Mat3D<float>(b)
     {
     }
@@ -77,6 +77,14 @@ public:
      */
     Mat3Df(Mat3Df&& from)
     : Mat3D<float>(from)
+    {
+    }
+
+    /*!
+     * Constructor to move from existing data(set)
+     */
+    Mat3Df(Dims3 dims, float* data) 
+    : Mat3D<float>(dims, data)
     {
     }
     

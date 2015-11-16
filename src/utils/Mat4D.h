@@ -10,6 +10,8 @@
 #include "Pos.h"
 #include "Dims.h"
 
+#include "Mat3D.h" // for operator[]
+
 template <typename F>
 class Mat4D 
 {
@@ -97,6 +99,14 @@ public:
             data[idx] = b.data[idx];
         }
         return *this;
+    }
+    
+    /*!
+     * Get the n-th Mat3D in this Mat4D
+     */
+    Mat3D<F> operator[](unsigned int n)
+    {
+        return Mat3D<F>(Dims3(w,h,d), data + n * w*h*d);
     }
     
     /*!

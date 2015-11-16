@@ -125,6 +125,20 @@ public:
 //         std::cerr << "Mat3Df move constructor\n";
         from.is_owner_of_data = false; // causes the mat to be moved to be deleted without deleting the data
     }
+    
+    /*!
+     * Constructor from existing data (copy from a dataset)
+     */
+    Mat3D<F>(Dims3 dims, F* data)
+    : w(dims.w)
+    , h(dims.h)
+    , d(dims.d)
+    , size(dims.size())
+    , data(data)
+    {
+        is_owner_of_data = false;
+    }
+    
     Dims3 getDims() const
     {
         return Dims3(w, h, d);

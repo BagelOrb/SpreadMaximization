@@ -12,6 +12,7 @@
 #include "Pos.h"
 #include "Dims.h"
 
+#include "Mat3Df.h" // for operator[]
 
 class Mat4Df : public Mat4D<float>
 {
@@ -31,6 +32,14 @@ public:
     {
         Mat4D<float>::operator=(b);
         return *this;
+    }
+    
+    /*!
+     * Get the n-th Mat3Df in this Mat4Df
+     */
+    Mat3Df operator[](unsigned int n)
+    {
+        return Mat3Df(Dims3(w,h,d), data + n * w*h*d);
     }
     
     /*!
