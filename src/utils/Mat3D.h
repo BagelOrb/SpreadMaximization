@@ -57,11 +57,11 @@ public:
 
     
 private:
-    bool dont_delete_data = false;
+    bool is_owner_of_data = true;
 public:
     ~Mat3D()
     {
-        if (!dont_delete_data && data)
+        if (is_owner_of_data && data)
         {
             delete[] data;
         }
@@ -123,7 +123,7 @@ public:
     , data(from.data)
     {
 //         std::cerr << "Mat3Df move constructor\n";
-        from.dont_delete_data = true; // causes the mat to be moved to be deleted without deleting the data
+        from.is_owner_of_data = false; // causes the mat to be moved to be deleted without deleting the data
     }
     Dims3 getDims() const
     {

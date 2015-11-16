@@ -61,11 +61,11 @@ public:
 
     
 private:
-    bool dont_delete_data = false;
+    bool is_owner_of_data = true;
 public:
     ~Mat4D()
     {
-        if (!dont_delete_data && data)
+        if (is_owner_of_data && data)
         {
             delete[] data;
         }
@@ -122,7 +122,7 @@ public:
     , size(from.size)
     , data(from.data)
     {
-        from.dont_delete_data;
+        from.is_owner_of_data = false;
     }
     Dims4 getDims() const
     {
