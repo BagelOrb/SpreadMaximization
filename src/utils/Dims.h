@@ -32,6 +32,7 @@ public:
     };
     iterator end() { return iterator(0,0,0,m, *this); }
     iterator begin() { return iterator(0,0,0,0, *this); }
+    unsigned int size() { return w*h*d*m; }
 };    
 
 class Dims3 
@@ -63,6 +64,7 @@ public:
     };
     iterator end() { return iterator(0,0,d, *this); }
     iterator begin() { return iterator(0,0,0, *this); }
+    unsigned int size() { return w*h*d; }
 };
 class Dims2
 {
@@ -93,6 +95,7 @@ public:
     };
     iterator end() { return iterator(0,h, *this); }
     iterator begin() { return iterator(0,0, *this); }
+    unsigned int size() { return w*h; }
 };
 
 
